@@ -1,0 +1,19 @@
+@page "/roles"
+@using Admin.Services
+@using Data;
+
+@inject ApiService api
+<h1>Roles</h1>
+
+<p>Roles are assigned to registered users. api path</p>
+<p>API Message: @message</p>
+
+@functions {
+    //IEnumerable<Role> roles;
+    string message;
+    protected override async Task OnInitAsync()
+    {
+
+        message = await api.GetWelcomeAsync();
+    }
+}
