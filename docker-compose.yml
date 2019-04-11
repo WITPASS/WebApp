@@ -1,8 +1,57 @@
-version: '3.4'
-
+version: "3"
 services:
+  admin:
+    build: ./Admin/
+    labels:
+      - traefik.enable=true
+      - traefik.port=80
+      - traefik.frontend.rule=Host:admin.localhost
+    env_file:
+      - app.env
+    #################################################################################################
+    #
+    # Below - developers don't need to modify the network definition, unless asked by the sysadmin.
+    #
+    ##################################################################################################
+
+    networks:
+      # This 'uses' the proxy-net / services-network
+      - services-network
+  public:
+    build: ./Public/
+    labels:
+      - traefik.enable=true
+      - traefik.port=80
+      - traefik.frontend.rule=Host:public.localhost
+    env_file:
+      - app.env
+    #################################################################################################
+    #
+    # Below - developers don't need to modify the network definition, unless asked by the sysadmin.
+    #
+    ##################################################################################################
+
+    networks:
+      # This 'uses' the proxy-net / services-network
+      - services-network
   api:
-    image: ${DOCKER_REGISTRY-}api
-    build:
-      context: .
-      dockerfile: Api/Dockerfile
+    build: ./Api/
+    labels:
+      - traefik.enable=true
+      - traefik.port=80
+      - traefik.frontend.rule=Host:api.localhost
+    env_file:
+      - app.env
+    #################################################################################################
+    #
+    # Below - developers don't need to modify the network definition, unless asked by the sysadmin.
+    #
+    ##################################################################################################
+
+    networks:
+      # This 'uses' the proxy-net / services-network
+      - services-network
+
+networks:
+  services-network:
+    external: true
