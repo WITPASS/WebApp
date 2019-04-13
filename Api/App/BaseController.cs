@@ -105,9 +105,9 @@ namespace Api.Controllers
     public class WelcomeController : ControllerBase
     {
         [HttpGet]
-        public string Get()
+        public object Get()
         {
-            return "welcome";
+            return new { Message = "Welcome" };
         }
     }
 }

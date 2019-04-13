@@ -9,6 +9,14 @@ namespace Data
     public class Entity
     {
         public Guid Id { get; set; }
+
+        [NotMapped]
+        public string __action { get; set; }
+    }
+
+    public class Welcome
+    {
+        public string Message { get; set; }
     }
 
     public class AppUser : Entity

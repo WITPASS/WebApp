@@ -1,19 +1,47 @@
 @page "/roles"
-@using Admin.Services
-@using Data;
+@using Admin.Components.Pages
 
-@inject ApiService api
+@inherits RolesBase
+
 <h1>Roles</h1>
 
-<p>Roles are assigned to registered users. api path</p>
-<p>API Message: @message</p>
+<p>Roles are assigned to registered users.</p>
+<button class="btn btn-primary btn-sm" onclick="@Add">Add Role</button>
 
-@functions {
-    //IEnumerable<Role> roles;
-    string message;
-    protected override async Task OnInitAsync()
+<table class="table table-striped">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+    </tr>
+
+    @foreach (var role in roles)
     {
-
-        message = await api.GetWelcomeAsync();
+        if (role.__action == "edit")
+        {
+            <tr>
+                <td>
+                    <input bind="@role.Name" class="form-control" />
+                </td>
+                <td>
+                    <input bind="@role.Description" class="form-control" />
+                </td>
+                <td>
+                    <button onclick="@(e => SaveAsync(role))" class="btn btn-primary btn-sm">Save</button>
+                    <button onclick="@(e => CancelAsync(role))" class="btn btn-primary btn-sm">Cancel</button>
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td>@role.Name</td>
+                <td>@role.Description</td>
+                <td>
+                    <button onclick="@(e => Edit(role))" class="btn btn-primary btn-sm">Edit</button>
+                    <button onclick="@(e => DeleteAsync(role))" class="btn btn-primary btn-sm">Delete</button>
+                </td>
+            </tr>
+        }
     }
-}
+</table>
