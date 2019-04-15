@@ -104,10 +104,23 @@ namespace Api.Controllers
     [ApiController]
     public class WelcomeController : ControllerBase
     {
+        AppDbContext _context;
+        public WelcomeController(AppDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public object Get()
         {
             return new { Message = "Welcome" };
+        }
+
+        [HttpGet, Route("update-database")]
+        public async Task<string> UpdateDatabase()
+        {
+            await _context.Database.MigrateAsync();
+            return "success";
         }
     }
 }
