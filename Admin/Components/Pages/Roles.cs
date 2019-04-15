@@ -21,13 +21,13 @@ namespace Admin.Components.Pages
 
         public void Add()
         {
-            var role = new Role { __action = "edit" };
+            var role = new Role { __tag = "edit" };
             roles.Add(role);
         }
 
         public void Edit(Role role)
         {
-            role.__action = "edit";
+            role.__tag = "edit";
         }
 
         public async Task CancelAsync(Role role)
@@ -51,7 +51,7 @@ namespace Admin.Components.Pages
         public async Task SaveAsync(Role role)
         {
             await Api.SaveAsync(role);
-            role.__action = null;
+            role.__tag = null;
         }
     }
 }
