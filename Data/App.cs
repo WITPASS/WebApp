@@ -11,7 +11,7 @@ namespace Data
         public Guid Id { get; set; }
 
         [NotMapped]
-        public string __action { get; set; }
+        public string __tag { get; set; }
     }
 
     public class Welcome
