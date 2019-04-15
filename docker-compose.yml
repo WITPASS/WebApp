@@ -1,13 +1,13 @@
 version: "3"
 services:
-  admin:
+  web.admin:
     build: ./Admin/
     labels:
       - traefik.enable=true
       - traefik.port=80
       - traefik.frontend.rule=Host:admin.localhost
     env_file:
-      - app.env
+      - ./Admin/app.env
     #################################################################################################
     #
     # Below - developers don't need to modify the network definition, unless asked by the sysadmin.
@@ -17,14 +17,14 @@ services:
     networks:
       # This 'uses' the proxy-net / services-network
       - services-network
-  public:
+  web.public:
     build: ./Public/
     labels:
       - traefik.enable=true
       - traefik.port=80
       - traefik.frontend.rule=Host:public.localhost
     env_file:
-      - app.env
+      - ./Public/app.env
     #################################################################################################
     #
     # Below - developers don't need to modify the network definition, unless asked by the sysadmin.
@@ -34,14 +34,14 @@ services:
     networks:
       # This 'uses' the proxy-net / services-network
       - services-network
-  api:
+  web.api:
     build: ./Api/
     labels:
       - traefik.enable=true
       - traefik.port=80
       - traefik.frontend.rule=Host:api.localhost
     env_file:
-      - app.env
+      - ./Api/app.env
     #################################################################################################
     #
     # Below - developers don't need to modify the network definition, unless asked by the sysadmin.
