@@ -340,7 +340,7 @@ ASALocalRun/
 healthchecksdb
 
 # docker env file
-app.env
+*.env
 
 # swap files
 *.swp
