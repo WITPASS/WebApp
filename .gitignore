@@ -341,3 +341,6 @@ healthchecksdb
 
 # docker env file
 app.env
+
+# swap files
+*.swp
