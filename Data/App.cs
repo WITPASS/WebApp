@@ -9,9 +9,18 @@ namespace Data
     public class Entity
     {
         public Guid Id { get; set; }
+        public virtual Branch Branch { get; set; }
+
+        [ForeignKey("Branch")]
+        public Guid? BranchId { get; set; }
 
         [NotMapped]
         public string __tag { get; set; }
+    }
+
+    public class Branch:Entity
+    {
+        public string Name { get; set; }
     }
 
     public class Welcome

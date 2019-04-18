@@ -16,6 +16,7 @@ namespace Api
             base.OnModelCreating(modelBuilder);
         }
 
+        public DbSet<Branch> Branches { get; set; }
         public DbSet<AppUser> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
