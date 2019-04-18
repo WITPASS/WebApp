@@ -1,0 +1,51 @@
+version: "3"
+services:
+  traefik: # traefik proxy
+    image: traefik:alpine
+    command: --api --docker
+    ports:
+      - "80:80"
+    volumes:
+      - /docker/traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - services-network
+  web.admin: # admin panel
+    build:
+      context: ./
+      dockerfile: Admin.Dockerfile
+    labels:
+      - traefik.enable=true
+      - traefik.port=80
+      - traefik.frontend.rule=Host:admin.localhost
+    environment:
+      - API_ENDPOINT=http://web.api/api/
+    networks:
+      - services-network
+  web.public:  # front-end
+    build:
+      context: ./
+      dockerfile: Public.Dockerfile
+    labels:
+      - traefik.enable=true
+      - traefik.port=80
+      - traefik.frontend.rule=Host:public.localhost
+    environment:
+      - API_ENDPOINT=http://web.api/api/
+    networks:
+      - services-network
+  web.api:  # web api
+    build:
+      context: ./
+      dockerfile: Api.Dockerfile
+    labels:
+      - traefik.enable=true
+      - traefik.port=80
+      - traefik.frontend.rule=Host:api.localhost
+    env_file:
+      - ./api.env
+    networks:
+      - services-network
+networks:
+  services-network:
+    external: true
