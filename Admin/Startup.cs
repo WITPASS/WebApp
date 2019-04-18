@@ -29,7 +29,7 @@ namespace Admin
         {
             services.AddMvc().AddNewtonsoftJson();
             services.AddHttpClient();
-            services.AddScoped(typeof(ApiService<>));
+            services.AddScoped(typeof(ApiService));
             services.AddRazorComponents();
         }
 

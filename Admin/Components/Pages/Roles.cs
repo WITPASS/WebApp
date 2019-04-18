@@ -12,11 +12,11 @@ namespace Admin.Components.Pages
         public IList<Role> roles = new List<Role>();
 
         [Inject]
-        protected ApiService<Role> Api { get; set; }
+        protected ApiService Api { get; set; }
 
         protected override async Task OnInitAsync()
         {
-            roles = await Api.GetAsync();
+            roles = await Api.GetAsync<Role>("roles");
         }
 
         public void Add()
@@ -36,7 +36,7 @@ namespace Admin.Components.Pages
                 roles.Remove(role);
             else
             {
-                var _role = await Api.GetAsync(role.Id);
+                var _role = await Api.GetAsync<Role>("roles", role.Id);
                 roles.Insert(roles.IndexOf(role), _role);
                 roles.Remove(role);
             }
@@ -44,13 +44,13 @@ namespace Admin.Components.Pages
 
         public async Task DeleteAsync(Role role)
         {
-            await Api.DeleteAsync(role.Id);
+            await Api.DeleteAsync("roles", role.Id);
             roles.Remove(role);
         }
 
         public async Task SaveAsync(Role role)
         {
-            await Api.SaveAsync(role);
+            await Api.SaveAsync("roles", role);
             role.__tag = null;
         }
     }

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Admin.Services
 {
-    public class ApiService<T> where T : Entity
+    public class ApiService
     {
         public HttpClient Client { get; }
 
@@ -23,40 +23,40 @@ namespace Admin.Services
             Client = client;
         }
 
-        public async Task<IList<T>> GetAsync()
+        public async Task<IList<T>> GetAsync<T>(string requestUri) where T: Entity
         {
-            var response = await Client.GetAsync("roles");
+            var response = await Client.GetAsync(requestUri);
             response.EnsureSuccessStatusCode();
-            return await DeserializeList(response.Content);
+            return await DeserializeList<T>(response.Content);
         }
 
-        public async Task<T> GetAsync(Guid id)
+        public async Task<T> GetAsync<T>(string requestUri, Guid id) where T: Entity
         {
-            var response = await Client.GetAsync(string.Format("roles/{0}", id));
+            var response = await Client.GetAsync(string.Format("{0}/{1}", requestUri, id));
             response.EnsureSuccessStatusCode();
-            return await DeserializeSingle(response.Content);
+            return await DeserializeSingle<T>(response.Content);
         }
 
-        public async Task SaveAsync(T ent)
+        public async Task SaveAsync<T>(string requestUri, T ent) where T: Entity
         {
             if (ent.Id == Guid.Empty)
-                await Client.PostAsync("roles", Serialize(ent));
+                await Client.PostAsync(requestUri, Serialize(ent));
             else
-                await Client.PutAsync(string.Format("roles/{0}", ent.Id), Serialize(ent));
+                await Client.PutAsync(string.Format("{0}/{1}", requestUri, ent.Id), Serialize(ent));
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(string requestUri, Guid id)
         {
-            await Client.DeleteAsync(string.Format("roles/{0}", id));
+            await Client.DeleteAsync(string.Format("{0}/{1}", requestUri, id));
         }
 
-        private async Task<T> DeserializeSingle(HttpContent content)
+        private async Task<T> DeserializeSingle<T>(HttpContent content) where T: Entity
         {
             var result = await content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(result);
         }
 
-        private async Task<IList<T>> DeserializeList(HttpContent content)
+        private async Task<IList<T>> DeserializeList<T>(HttpContent content) where T: Entity
         {
             var result = await content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IList<T>>(result);
