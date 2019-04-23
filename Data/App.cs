@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Data
 {
@@ -13,13 +11,12 @@ namespace Data
 
         [ForeignKey("Branch")]
         public Guid? BranchId { get; set; }
-
-        [NotMapped]
         public string __tag { get; set; }
     }
 
-    public class Branch:Entity
+    public class Branch : Entity
     {
+        [Required]
         public string Name { get; set; }
     }
 
@@ -49,7 +46,6 @@ namespace Data
 
         [ForeignKey("User")]
         public Guid? UserId { get; set; }
-
         [ForeignKey("Role")]
         public Guid? RoleId { get; set; }
     }

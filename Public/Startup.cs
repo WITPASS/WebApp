@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Public.Services;
 
 namespace Public
 {
@@ -32,6 +33,8 @@ namespace Public
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddHttpClient();
+            services.AddScoped(typeof(ApiService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

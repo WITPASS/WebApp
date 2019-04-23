@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Data;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
-namespace Admin.Services
+namespace Public.Services
 {
     public class ApiService
     {

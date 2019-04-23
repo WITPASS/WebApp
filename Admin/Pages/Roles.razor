@@ -1,0 +1,37 @@
+@page "/roles"
+@inject HttpClient Http
+
+<h1>Roles</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+@functions {
+    IList<Role> items = new List<Role>();
+
+    protected override async Task OnInitAsync()
+    {
+        Http.BaseAddress = new Uri("http://localhost:50567/api/");
+        items = await Http.GetJsonAsync<IList<Role>>("roles");
+    }
+}
