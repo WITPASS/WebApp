@@ -1,6 +1,6 @@
 ﻿@inject IJSRuntime js
 
-<button onclick="@ConfirmAsync" class="btn btn-primary btn-sm">@ChildContent</button>
+<button onclick="@(e=>ConfirmAsync(e))" class="btn btn-primary btn-sm">@ChildContent</button>
 
 @functions {
     [Parameter]
@@ -12,12 +12,12 @@
     [Parameter]
     EventCallback<UIMouseEventArgs> OnClick { get; set; }
 
-    async Task ConfirmAsync()
+    async Task ConfirmAsync(UIMouseEventArgs e)
     {
         var ans = await js.InvokeAsync<bool>("confirm", Ask);
         if (ans)
         {
-            await js.InvokeAsync<object>("alert", "yes");
+            await OnClick.InvokeAsync(e);
         }
     }
 }

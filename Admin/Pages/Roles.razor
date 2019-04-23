@@ -1,37 +1,49 @@
 @page "/roles"
-@inject HttpClient Http
+@inherits RolesComponent
 
 <h1>Roles</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in items)
+<p>Roles are assigned to registered users.</p>
+<div>
+    <button onclick="@Add" class="btn btn-primary btn-sm">Add Role</button>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            if (item.__tag == "edit")
+            {
+                <tr>
+                    <td>
+                        <input bind="@item.Name" class="form-control" />
+                    </td>
+                    <td>
+                        <input bind="@item.Description" class="form-control" />
+                    </td>
+                    <td>
+                        <button onclick="@(e => SaveAsync(item))" class="btn btn-primary btn-sm">Save</button>
+                        <Confirm OnClick="@(e => CancelAsync(item))" Ask="Are you sure you want to cancel changes?">Cancel</Confirm>
+                    </td>
+                </tr>
+            }
+            else
             {
                 <tr>
                     <td>@item.Name</td>
                     <td>@item.Description</td>
                     <td>
-
+                        <button onclick="@(e => Edit(item))" class="btn btn-primary btn-sm">Edit</button>
+                        <Confirm OnClick="@(e => DeleteAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
                     </td>
                 </tr>
             }
-        </tbody>
-    </table>
-
-@functions {
-    IList<Role> items = new List<Role>();
-
-    protected override async Task OnInitAsync()
-    {
-        Http.BaseAddress = new Uri("http://localhost:50567/api/");
-        items = await Http.GetJsonAsync<IList<Role>>("roles");
-    }
-}
+        }
+    </tbody>
+</table>

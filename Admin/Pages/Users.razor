@@ -1,0 +1,65 @@
+@page "/users"
+@inherits UsersComponent
+
+<h1>Users</h1>
+
+<p>Registered users can access resources based on assigned roles.</p>
+
+@if (item == null)
+{
+    <div>
+        <button onclick="@Add" class="btn btn-primary btn-sm">Add User</button>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.Email</td>
+                    <td>
+                        <button onclick="@(e=>Edit(item))" class="btn btn-primary btn-sm">Edit</button>
+                        <Confirm OnClick="@(e=>DeleteAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+
+    <EditForm Model="item" OnValidSubmit="@SaveAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label>First Name</label>
+            <InputText bind-Value="@item.FirstName" Class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label>Last Name</label>
+            <InputText bind-Value="@item.LastName" Class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" bind="@item.Email" Class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" bind="@item.Password" Class="form-control" />
+        </div>
+        <div>
+            <button onclick="@CancelAsync" class="btn btn-primary btn-sm">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        </div>
+    </EditForm>
+}
