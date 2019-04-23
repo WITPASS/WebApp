@@ -26,15 +26,17 @@ namespace Api.Migrations
 
                     b.Property<Guid?>("BranchId");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired();
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .IsRequired();
 
-                    b.Property<string>("Password");
-
-                    b.Property<string>("__tag");
+                    b.Property<string>("Password")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -53,8 +55,6 @@ namespace Api.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<string>("__tag");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
@@ -71,9 +71,8 @@ namespace Api.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Name");
-
-                    b.Property<string>("__tag");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -92,8 +91,6 @@ namespace Api.Migrations
                     b.Property<Guid?>("RoleId");
 
                     b.Property<Guid?>("UserId");
-
-                    b.Property<string>("__tag");
 
                     b.HasKey("Id");
 
