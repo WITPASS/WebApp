@@ -11,6 +11,8 @@ namespace Data
 
         [ForeignKey("Branch")]
         public Guid? BranchId { get; set; }
+
+        [NotMapped]
         public string __tag { get; set; }
     }
 
@@ -27,14 +29,19 @@ namespace Data
 
     public class AppUser : Entity
     {
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
+        [Required]
         public string Email { get; set; }
+        [Required]
         public string Password { get; set; }
     }
 
     public class Role : Entity
     {
+        [Required]
         public string Name { get; set; }
         public string Description { get; set; }
     }
