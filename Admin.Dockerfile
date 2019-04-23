@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-stretch AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-preview4-stretch AS build
 WORKDIR /app
 EXPOSE 80
 
@@ -13,10 +13,9 @@ WORKDIR /app/
 COPY Admin/. ./Admin/
 COPY Data/. ./Data/
 WORKDIR /app/Admin
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release
 
 # build runtime image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-stretch-slim
-WORKDIR /app
-COPY --from=build /app/Admin/out ./
-ENTRYPOINT ["dotnet", "Admin.dll"]
+FROM nginx:alpine
+COPY --from=build /app/Admin/bin/Release/netstandard2.0/publish/Admin/dist /usr/share/nginx/html/
+COPY nginx.conf /etc/nginx/nginx.conf
