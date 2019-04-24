@@ -1,0 +1,54 @@
+﻿@typeparam TItem
+<h1>@Title</h1>
+<p>@Summary</p>
+@if (Item == null)
+{
+    <div>@TopControls</div>
+    <table class="table">
+        <thead>
+            <tr>@TableHeader</tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Items)
+            {
+                <tr>@TableBody(item)</tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <EditForm Model="Item" OnValidSubmit="@OnFormSave">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        @FormBody(Item)
+    </EditForm>
+}
+@functions {
+    [Parameter]
+    string Title { get; set; }
+
+    [Parameter]
+    string Summary { get; set; }
+
+    [Parameter]
+    RenderFragment TopControls { get; set; }
+
+    [Parameter]
+    RenderFragment TableHeader { get; set; }
+
+    [Parameter]
+    RenderFragment<TItem> TableBody { get; set; }
+
+    [Parameter]
+    RenderFragment<TItem> FormBody { get; set; }
+
+    [Parameter]
+    EventCallback OnFormSave { get; set; }
+
+    [Parameter]
+    IList<TItem> Items { get; set; }
+
+    [Parameter]
+    TItem Item { get; set; }
+}

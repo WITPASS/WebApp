@@ -11,9 +11,6 @@ namespace Data
 
         [ForeignKey("Branch")]
         public Guid? BranchId { get; set; }
-
-        [NotMapped]
-        public string __tag { get; set; }
     }
 
     public class Branch : Entity

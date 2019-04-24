@@ -1,46 +1,26 @@
 @page "/users"
 @inherits UsersComponent
 
-<h1>Users</h1>
-
-<p>Registered users can access resources based on assigned roles.</p>
-
-@if (item == null)
-{
-    <div>
+<BasePage Title="Users" Summary="Registered users can access resources based on assigned roles." Items="@items" Item="@item" OnFormSave="@SaveAsync">
+    <TopControls>
         <button onclick="@Add" class="btn btn-primary btn-sm">Add User</button>
-    </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in items)
-            {
-                <tr>
-                    <td>@item.FirstName</td>
-                    <td>@item.LastName</td>
-                    <td>@item.Email</td>
-                    <td>
-                        <button onclick="@(e=>Edit(item))" class="btn btn-primary btn-sm">Edit</button>
-                        <Confirm OnClick="@(e=>DeleteAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-
-    <EditForm Model="item" OnValidSubmit="@SaveAsync">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+    </TopControls>
+    <TableHeader>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th></th>
+    </TableHeader>
+    <TableBody Context="item">
+        <td>@item.FirstName</td>
+        <td>@item.LastName</td>
+        <td>@item.Email</td>
+        <td>
+            <button onclick="@(e=>Edit(item))" class="btn btn-primary btn-sm">Edit</button>
+            <Confirm OnClick="@(e=>DeleteAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
+        </td>
+    </TableBody>
+    <FormBody Context="item">
         <div class="form-group">
             <label>First Name</label>
             <InputText bind-Value="@item.FirstName" Class="form-control"></InputText>
@@ -58,8 +38,8 @@ else
             <input type="password" bind="@item.Password" Class="form-control" />
         </div>
         <div>
-            <button onclick="@CancelAsync" class="btn btn-primary btn-sm">Cancel</button>
+            <Confirm OnClick="@CancelAsync" Ask="Are you sure you want to cancel changes?">Cancel</Confirm>
             <button type="submit" class="btn btn-primary btn-sm">Save</button>
         </div>
-    </EditForm>
-}
+    </FormBody>
+</BasePage>

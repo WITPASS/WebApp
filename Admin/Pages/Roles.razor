@@ -1,49 +1,36 @@
 @page "/roles"
 @inherits RolesComponent
 
-<h1>Roles</h1>
-
-<p>Roles are assigned to registered users.</p>
-<div>
-    <button onclick="@Add" class="btn btn-primary btn-sm">Add Role</button>
-</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in items)
-        {
-            if (item.__tag == "edit")
-            {
-                <tr>
-                    <td>
-                        <input bind="@item.Name" class="form-control" />
-                    </td>
-                    <td>
-                        <input bind="@item.Description" class="form-control" />
-                    </td>
-                    <td>
-                        <button onclick="@(e => SaveAsync(item))" class="btn btn-primary btn-sm">Save</button>
-                        <Confirm OnClick="@(e => CancelAsync(item))" Ask="Are you sure you want to cancel changes?">Cancel</Confirm>
-                    </td>
-                </tr>
-            }
-            else
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Description</td>
-                    <td>
-                        <button onclick="@(e => Edit(item))" class="btn btn-primary btn-sm">Edit</button>
-                        <Confirm OnClick="@(e => DeleteAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>
+<BasePage Title="Roles" Summary="Roles are assigned to registered users." Items="@items" Item="@item" OnFormSave="@SaveAsync">
+    <TopControls>
+        <button onclick="@Add" class="btn btn-primary btn-sm">Add Role</button>
+    </TopControls>
+    <TableHeader>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+    </TableHeader>
+    <TableBody Context="item">
+        <td>@item.Name</td>
+        <td>@item.Description</td>
+        <td>
+            <button onclick="@(e => Edit(item))" class="btn btn-primary btn-sm">Edit</button>
+            <Confirm OnClick="@(e => DeleteAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
+        </td>
+    </TableBody>
+    <FormBody Context="item">
+        <div class="form-group">
+            <label>Role Name</label>
+            <InputText bind-Value="@item.Name" Class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <InputText bind-Value="@item.Description" Class="form-control"></InputText>
+        </div>
+        
+        <div>
+            <Confirm OnClick="@CancelAsync" Ask="Are you sure you want to cancel changes?">Cancel</Confirm>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        </div>
+    </FormBody>
+</BasePage>
