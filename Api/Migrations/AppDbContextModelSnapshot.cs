@@ -62,6 +62,36 @@ namespace Api.Migrations
                     b.ToTable("Branches");
                 });
 
+            modelBuilder.Entity("Data.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Active");
+
+                    b.Property<Guid?>("BranchId");
+
+                    b.Property<byte[]>("Data");
+
+                    b.Property<string>("Description");
+
+                    b.Property<int>("Height");
+
+                    b.Property<string>("Meta");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Title");
+
+                    b.Property<int>("Width");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("Data.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -111,6 +141,13 @@ namespace Api.Migrations
                 });
 
             modelBuilder.Entity("Data.Branch", b =>
+                {
+                    b.HasOne("Data.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId");
+                });
+
+            modelBuilder.Entity("Data.Image", b =>
                 {
                     b.HasOne("Data.Branch", "Branch")
                         .WithMany()
