@@ -344,6 +344,3 @@ healthchecksdb
 
 # swap files
 *.swp
-
-# db migrations
-Migrations/
