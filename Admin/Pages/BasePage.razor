@@ -3,15 +3,26 @@
 <p>@Summary</p>
 @if (Item == null)
 {
-    <div>@TopControls</div>
+    <div>
+        <button onclick="@OnAdd" class="btn btn-primary btn-sm">Add New</button>
+    </div>
     <table class="table">
         <thead>
-            <tr>@TableHeader</tr>
+            <tr>
+                @TableHeader
+                <th></th>
+            </tr>
         </thead>
         <tbody>
             @foreach (var item in Items)
             {
-                <tr>@TableBody(item)</tr>
+                <tr>
+                    @TableBody(item)
+                    <td>
+                        <button onclick="@(async ()=> await OnEdit.InvokeAsync(item))" class="btn btn-primary btn-sm">Edit</button>
+                        <Confirm OnClick="@(async ()=> await OnDelete.InvokeAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -22,6 +33,10 @@ else
         <DataAnnotationsValidator />
         <ValidationSummary />
         @FormBody(Item)
+        <div>
+            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+            <Confirm OnClick="@OnFormCancel" Ask="Are you sure you want to cancel changes?">Cancel</Confirm>
+        </div>
     </EditForm>
 }
 @functions {
@@ -45,6 +60,18 @@ else
 
     [Parameter]
     EventCallback OnFormSave { get; set; }
+
+    [Parameter]
+    EventCallback OnFormCancel { get; set; }
+
+    [Parameter]
+    EventCallback OnAdd { get; set; }
+
+    [Parameter]
+    EventCallback<TItem> OnEdit { get; set; }
+
+    [Parameter]
+    EventCallback<TItem> OnDelete { get; set; }
 
     [Parameter]
     IList<TItem> Items { get; set; }

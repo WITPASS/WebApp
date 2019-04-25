@@ -1,24 +1,17 @@
 @page "/users"
 @inherits UsersComponent
 
-<BasePage Title="Users" Summary="Registered users can access resources based on assigned roles." Items="@items" Item="@item" OnFormSave="@SaveAsync">
-    <TopControls>
-        <button onclick="@Add" class="btn btn-primary btn-sm">Add User</button>
-    </TopControls>
+<BasePage Title="Users" Items="@items" Item="@item" OnAdd="@Add" OnEdit="@((AppUser e)=>Edit(e))" OnDelete="@((AppUser e)=>DeleteAsync(e))"
+          Summary="Registered users can access resources based on assigned roles." OnFormSave="@SaveAsync" OnFormCancel="@CancelAsync">
     <TableHeader>
         <th>First Name</th>
         <th>Last Name</th>
         <th>Email</th>
-        <th></th>
     </TableHeader>
     <TableBody Context="item">
         <td>@item.FirstName</td>
         <td>@item.LastName</td>
         <td>@item.Email</td>
-        <td>
-            <button onclick="@(e=>Edit(item))" class="btn btn-primary btn-sm">Edit</button>
-            <Confirm OnClick="@(e=>DeleteAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
-        </td>
     </TableBody>
     <FormBody Context="item">
         <div class="form-group">
@@ -36,10 +29,6 @@
         <div class="form-group">
             <label>Password</label>
             <input type="password" bind="@item.Password" Class="form-control" />
-        </div>
-        <div>
-            <Confirm OnClick="@CancelAsync" Ask="Are you sure you want to cancel changes?">Cancel</Confirm>
-            <button type="submit" class="btn btn-primary btn-sm">Save</button>
         </div>
     </FormBody>
 </BasePage>
