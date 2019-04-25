@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Data;
+using Microsoft.AspNet.OData;
 
 namespace Api.Controllers
 {
@@ -22,7 +23,7 @@ namespace Api.Controllers
             _dbSet = dbSet;
         }
 
-        [HttpGet]
+        [HttpGet, EnableQuery]
         public async Task<ActionResult<IEnumerable<T>>> Get()
         {
             return await _dbSet.ToListAsync();

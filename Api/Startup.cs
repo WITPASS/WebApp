@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -38,7 +39,7 @@ namespace Api
 
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(ConnectionString));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            services.AddOData();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Web API", Version = "v1" });
@@ -68,7 +69,10 @@ namespace Api
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseMvc();
+            app.UseMvc(routeBuilder=> {
+                routeBuilder.EnableDependencyInjection();
+                routeBuilder.Select().Filter().Expand().Count().OrderBy().MaxTop(500);
+            });
         }
         private string ConnectionString
         {
