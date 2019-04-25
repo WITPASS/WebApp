@@ -1,0 +1,60 @@
+﻿@inject IJSRuntime js
+<img width="@Width" height="@Height" src="@Base64ImageString" class="@Class" />
+<input ref="inputFile" class="form-control" type="file" onchange="@ImageSelected" />
+
+@functions {
+    ElementRef inputFile;
+
+    string Base64ImageString { get; set; }
+
+    [Parameter]
+    string Class { get; set; }
+
+    [Parameter]
+    int Width { get; set; }
+
+    [Parameter]
+    EventCallback<int> WidthChanged { get; set; }
+
+    [Parameter]
+    int Height { get; set; }
+
+    [Parameter]
+    EventCallback<int> HeightChanged { get; set; }
+
+    [Parameter]
+    byte[] Data { get; set; }
+
+    [Parameter]
+    EventCallback<byte[]> DataChanged { get; set; }
+
+    [Parameter]
+    string Meta { get; set; }
+
+    [Parameter]
+    EventCallback<string> MetaChanged { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        //base.OnParametersSet();
+        //data:image/jpeg;base64,
+        if (Data != null && Meta != null)
+        {
+            var base64String = Convert.ToBase64String(Data);
+            Base64ImageString = $"data:{Meta};base64,{base64String}";
+        }
+    }
+
+    async Task ImageSelected()
+    {
+        var base64String = await js.InvokeAsync<string>("readFileAsBase64", inputFile);
+        var data = base64String.Split(',');
+
+        await DataChanged.InvokeAsync(Convert.FromBase64String(data[1]));
+        await MetaChanged.InvokeAsync(data[0].Split(';')[0].Split(':')[1]);
+
+        var dim = await js.InvokeAsync<int[]>("getImageWidthHeight", base64String);
+        await WidthChanged.InvokeAsync(dim[0]);
+        await HeightChanged.InvokeAsync(dim[1]);
+    }
+}
