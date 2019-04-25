@@ -1,13 +1,16 @@
 ﻿@inject IJSRuntime js
 
-<button onclick="@(e=>ConfirmAsync(e))" class="btn btn-primary btn-sm">@ChildContent</button>
+<button onclick="@(e=>ConfirmAsync(e))" class="@Class">@ChildContent</button>
 
 @functions {
     [Parameter]
-    private string Ask { get; set; }
+    string Ask { get; set; }
 
     [Parameter]
-    private RenderFragment ChildContent { get; set; }
+    string Class { get; set; }
+
+    [Parameter]
+    RenderFragment ChildContent { get; set; }
 
     [Parameter]
     EventCallback<UIMouseEventArgs> OnClick { get; set; }
