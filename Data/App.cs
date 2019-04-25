@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -52,5 +53,19 @@ namespace Data
         public Guid? UserId { get; set; }
         [ForeignKey("Role")]
         public Guid? RoleId { get; set; }
+    }
+
+    public class Image : Entity
+    {
+        public string Name { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public string Meta { get; set; }
+        public bool Active { get; set; }
+
+        [JsonConverter(typeof(ByteArrayConverter))]
+        public byte[] Data { get; set; }
     }
 }

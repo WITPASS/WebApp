@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Data;
+﻿using Data;
 
 namespace Api.Controllers
 {
@@ -21,5 +15,10 @@ namespace Api.Controllers
     public class UserRolesController : BaseController<UserRole>
     {
         public UserRolesController(AppDbContext context) : base(context, context.UserRoles) { }
+    }
+
+    public class ImagesController : BaseController<Image>
+    {
+        public ImagesController(AppDbContext context) : base(context, context.Images) { }
     }
 }

@@ -1,9 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Data;
+﻿using Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api
 {
@@ -20,5 +16,6 @@ namespace Api
         public DbSet<AppUser> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Image> Images { get; set; }
     }
 }
