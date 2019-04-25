@@ -1,41 +1,45 @@
 ﻿@typeparam TItem
 <h1>@Title</h1>
-<p>@Summary</p>
 @if (Item == null)
 {
-    <div>
-        <button onclick="@OnAdd" class="btn btn-primary btn-sm">Add New</button>
+    <p>@Summary</p>
+    <div style="margin-bottom:4px">
+        <button onclick="@OnAdd" class="btn btn-primary">Add New</button>
+        @TopControls
     </div>
-    <table class="table">
-        <thead>
-            <tr>
-                @TableHeader
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Items)
-            {
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="thead-light">
                 <tr>
-                    @TableBody(item)
-                    <td>
-                        <button onclick="@(async ()=> await OnEdit.InvokeAsync(item))" class="btn btn-primary btn-sm">Edit</button>
-                        <Confirm OnClick="@(async ()=> await OnDelete.InvokeAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
-                    </td>
+                    @TableHeader
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Items)
+                {
+                    <tr>
+                        @TableBody(item)
+                        <td>
+                            <button onclick="@(async ()=> await OnEdit.InvokeAsync(item))" class="btn btn-link btn-sm">Edit</button>
+                            <Confirm OnClick="@(async ()=> await OnDelete.InvokeAsync(item))" Ask="Are you sure you want to delete?" Class="btn btn-link btn-sm">Delete</Confirm>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 else
 {
+    <div class="alert alert-info" role="alert">@Action</div>
     <EditForm Model="Item" OnValidSubmit="@OnFormSave">
         <DataAnnotationsValidator />
         <ValidationSummary />
         @FormBody(Item)
         <div>
-            <button type="submit" class="btn btn-primary btn-sm">Save</button>
-            <Confirm OnClick="@OnFormCancel" Ask="Are you sure you want to cancel changes?">Cancel</Confirm>
+            <button type="submit" class="btn btn-primary" style="width:75px">Save</button>
+            <Confirm OnClick="@OnFormCancel" Ask="Are you sure you want to cancel changes?" Class="btn btn-light">Cancel</Confirm>
         </div>
     </EditForm>
 }
@@ -78,4 +82,6 @@ else
 
     [Parameter]
     TItem Item { get; set; }
+
+    string Action => ((Guid) typeof(TItem).GetProperty("Id").GetValue(Item)) == Guid.Empty ? "Add New" : "Edit";
 }
