@@ -1,14 +1,21 @@
 ﻿@inject IJSRuntime js
-<img width="@Width" height="@Height" src="@Base64ImageString" class="@Class" />
+<img width="@Width" height="@Height" src="@Url" class="@Class" />
 <input ref="inputFile" class="form-control" type="file" onchange="@ImageSelected" />
 
 @functions {
     ElementRef inputFile;
 
-    string Base64ImageString { get; set; }
+    [Parameter]
+    string Url { get; set; }
 
     [Parameter]
     string Class { get; set; }
+
+    [Parameter]
+    int Size { get; set; }
+
+    [Parameter]
+    EventCallback<int> SizeChanged { get; set; }
 
     [Parameter]
     int Width { get; set; }
@@ -34,27 +41,32 @@
     [Parameter]
     EventCallback<string> MetaChanged { get; set; }
 
+    [Parameter]
+    int Version { get; set; }
+
+    [Parameter]
+    EventCallback<int> VersionChanged { get; set; }
+
     protected override void OnParametersSet()
     {
-        //base.OnParametersSet();
-        //data:image/jpeg;base64,
         if (Data != null && Meta != null)
         {
             var base64String = Convert.ToBase64String(Data);
-            Base64ImageString = $"data:{Meta};base64,{base64String}";
+            Url = $"data:{Meta};base64,{base64String}";
         }
     }
 
     async Task ImageSelected()
     {
-        var base64String = await js.InvokeAsync<string>("readFileAsBase64", inputFile);
-        var data = base64String.Split(',');
+        var info = await js.InvokeAsync<string[]>("getImageInfo", inputFile);
 
+        var data = info[3].Split(',');
         await DataChanged.InvokeAsync(Convert.FromBase64String(data[1]));
         await MetaChanged.InvokeAsync(data[0].Split(';')[0].Split(':')[1]);
 
-        var dim = await js.InvokeAsync<int[]>("getImageWidthHeight", base64String);
-        await WidthChanged.InvokeAsync(dim[0]);
-        await HeightChanged.InvokeAsync(dim[1]);
+        await WidthChanged.InvokeAsync(int.Parse(info[0]));
+        await HeightChanged.InvokeAsync(int.Parse(info[1]));
+        await SizeChanged.InvokeAsync(int.Parse(info[2]));
+        await VersionChanged.InvokeAsync(Version + 1);
     }
 }

@@ -4,6 +4,6 @@ namespace Admin.Pages
 {
     public class UsersComponent : BaseComponent<AppUser>
     {
-        public UsersComponent() : base("users") { }
+        public UsersComponent() : base("api/users") { }
     }
 }

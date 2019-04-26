@@ -15,7 +15,7 @@ namespace Admin.Pages
         }
 
         protected T item;
-        protected string _endpoint = "users";
+        protected string _endpoint;
         protected IList<T> items = new List<T>();
 
         [Inject]

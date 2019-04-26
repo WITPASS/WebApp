@@ -20,7 +20,6 @@
             <div class="form-group">
                 <label class="text-primary">Name</label>
                 <InputText bind-Value="@item.Name" Class="form-control" />
-                <small>Does not show on front-end</small>
             </div>
             <div class="form-group">
                 <label class="text-primary">Title</label>
@@ -30,21 +29,30 @@
                 <label class="text-primary">Description</label>
                 <InputTextArea bind-Value="@item.Description" Class="form-control" />
             </div>
-            <div class="form-group">
-                <label class="text-primary">Width (px)</label>
-                <input type="number" bind="@item.Width" readonly class="form-control" />
+            <div class="form-row">
+                <div class="form-group col">
+                    <label class="text-primary">Size</label>
+                    <input type="number" bind="@item.Size" readonly class="form-control" />
+                </div>
+                <div class="form-group col">
+                    <label class="text-primary">Width</label>
+                    <input type="number" bind="@item.Width" readonly class="form-control" />
+                </div>
+                <div class="form-group col">
+                    <label class="text-primary">Height</label>
+                    <input type="number" bind="@item.Height" readonly class="form-control" />
+                </div>
+                <div class="form-group col">
+                    <label class="text-primary">Meta</label>
+                    <input type="text" bind="@item.Meta" readonly class="form-control" />
+                </div>
+                <div class="form-group col">
+                    <label class="text-primary">Version</label>
+                    <input type="number" bind="@item.Version" readonly class="form-control" />
+                </div>
             </div>
             <div class="form-group">
-                <label class="text-primary">Height (px)</label>
-                <input type="number" bind="@item.Height" readonly class="form-control" />
-            </div>
-            <div class="form-group">
-                <label class="text-primary">Meta</label>
-                <input type="text" bind="@item.Meta" readonly class="form-control" />
-                <small>Does not show on front-end</small>
-            </div>
-            <div class="form-group">
-                <InputImage bind-Data="@item.Data" bind-Meta="@item.Meta" bind-Width="@item.Width" bind-Height="@item.Height" />
+                <InputImage Url="@(Http.BaseAddress+item.Url)" bind-Data="@item.Data" bind-Size="@item.Size" bind-Width="@item.Width" bind-Height="@item.Height" bind-Meta="@item.Meta" bind-Version="@item.Version" />
             </div>
         </FormBody>
     </BasePage>

@@ -21,11 +21,11 @@ namespace Admin
 
             if (uri.IsLoopback)
             {
-                http.BaseAddress = new Uri("http://localhost:50567/api/");
+                http.BaseAddress = new Uri("http://localhost:50567/");
             }
             else
             {
-                http.BaseAddress = new Uri("http://api.localhost/api/");
+                http.BaseAddress = new Uri("http://api.localhost/");
             }
 
             app.AddComponent<App>("app");

@@ -1,36 +1,28 @@
-window.readFileAsBase64 = (fileInput) => {
+window.getImageInfo = (fileInput) => {
     const readAsDataURL = (fileInput) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
+            var file = fileInput.files[0];
 
             reader.onerror = () => {
                 reader.abort();
-                reject(new Error("Error reading file."));
+                reject(new Error("Error reading file"));
             };
 
             reader.addEventListener("load", () => {
-                resolve(reader.result);
+                var img = new Image();
+
+                img.onload = function () {
+                    resolve([img.width.toString(), img.height.toString(), file.size.toString(), reader.result]);
+                };
+        
+                img.src = reader.result;
+
             }, false);
 
-            reader.readAsDataURL(fileInput.files[0]);
+            reader.readAsDataURL(file);
         });
     };
 
     return readAsDataURL(fileInput);
-};
-
-window.getImageWidthHeight = (src) => {
-    const getWidthHeight = (src) => {
-        return new Promise((res, rej) => {
-            var img = new Image();
-
-            img.onload = function () {
-                res([img.width, img.height]);
-            };
-
-            img.src = src;
-        });
-    };
-
-    return getWidthHeight(src);
 };

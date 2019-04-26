@@ -13,8 +13,8 @@ namespace Api.Controllers
     [ApiController]
     public class BaseController<T> : ControllerBase where T : Entity
     {
-        private readonly AppDbContext _context;
-        private readonly DbSet<T> _dbSet;
+        protected readonly AppDbContext _context;
+        protected readonly DbSet<T> _dbSet;
 
         public BaseController(AppDbContext context, DbSet<T> dbSet)
         {
@@ -104,7 +104,7 @@ namespace Api.Controllers
     [ApiController]
     public class WelcomeController : ControllerBase
     {
-        AppDbContext _context;
+        protected readonly AppDbContext _context;
         public WelcomeController(AppDbContext context)
         {
             _context = context;

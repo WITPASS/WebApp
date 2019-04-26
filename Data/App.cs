@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -35,6 +34,11 @@ namespace Data
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
+
+        public bool ShouldSerializePassword()
+        {
+            return false;
+        }
     }
 
     public class Role : Entity
@@ -62,10 +66,18 @@ namespace Data
         public string Description { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public int Size { get; set; }
         public string Meta { get; set; }
+        public int Version { get; set; }
         public bool Active { get; set; }
-
-        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Data { get; set; }
+
+        [NotMapped]
+        public string Url => $"api/images/{Id}/{Version}";
+
+        public bool ShouldSerializeData()
+        {
+            return false;
+        }
     }
 }

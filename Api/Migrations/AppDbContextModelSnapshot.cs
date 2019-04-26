@@ -81,7 +81,11 @@ namespace Api.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int>("Size");
+
                     b.Property<string>("Title");
+
+                    b.Property<int>("Version");
 
                     b.Property<int>("Width");
 
