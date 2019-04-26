@@ -23,15 +23,15 @@ namespace Api.Controllers
         }
 
         [HttpGet, EnableQuery]
-        public async Task<ActionResult<IEnumerable<T>>> Get()
+        virtual public async Task<ActionResult<IEnumerable<T>>> Get()
         {
-            return await _dbSet.ToListAsync();
+            return await _dbSet.AsNoTracking().ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<T>> Get(Guid id)
+        virtual public async Task<ActionResult<T>> Get(Guid id)
         {
-            var ent = await _dbSet.FindAsync(id);
+            var ent = await _dbSet.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
 
             if (ent == null)
             {
@@ -42,7 +42,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, T ent)
+        virtual public async Task<IActionResult> Put(Guid id, T ent)
         {
             if (id != ent.Id)
             {
@@ -71,7 +71,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<T>> Post(T ent)
+        virtual public async Task<ActionResult<T>> Post(T ent)
         {
             _dbSet.Add(ent);
             await _context.SaveChangesAsync();
@@ -80,9 +80,10 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<T>> Delete(Guid id)
+        virtual public async Task<ActionResult<T>> Delete(Guid id)
         {
             var ent = await _dbSet.FindAsync(id);
+
             if (ent == null)
             {
                 return NotFound();

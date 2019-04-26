@@ -35,8 +35,7 @@ namespace Api.Migrations
                     b.Property<string>("LastName")
                         .IsRequired();
 
-                    b.Property<string>("Password")
-                        .IsRequired();
+                    b.Property<string>("Password");
 
                     b.HasKey("Id");
 
@@ -79,7 +78,8 @@ namespace Api.Migrations
 
                     b.Property<string>("Meta");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<int>("Size");
 

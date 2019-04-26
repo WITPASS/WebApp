@@ -54,6 +54,11 @@
             var base64String = Convert.ToBase64String(Data);
             Url = $"data:{Meta};base64,{base64String}";
         }
+
+        if(Url.Contains("00000000-0000-0000-0000-000000000000"))
+        {
+            Url = null;
+        }
     }
 
     async Task ImageSelected()

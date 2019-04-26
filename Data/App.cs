@@ -32,7 +32,6 @@ namespace Data
         public string LastName { get; set; }
         [Required]
         public string Email { get; set; }
-        [Required]
         public string Password { get; set; }
 
         public bool ShouldSerializePassword()
@@ -61,6 +60,7 @@ namespace Data
 
     public class Image : Entity
     {
+        [Required]
         public string Name { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
