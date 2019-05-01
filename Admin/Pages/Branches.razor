@@ -1,0 +1,40 @@
+@page "/branches"
+@inherits BranchesComponent
+
+<BasePage Title="Branches" Items="@Items" Item="@Item" OnAdd="@Add" OnEdit="@((Branch e)=>Edit(e))" OnDelete="@((Branch e)=>DeleteAsync(e))"
+          Summary="Each branch has its own resources including branch admin and users." OnFormSave="@SaveAsync" OnFormCancel="@CancelAsync">
+    <TableHeader>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Select</th>
+    </TableHeader>
+    <TableBody Context="item">
+        <td>@item.Name</td>
+        <td>@item.Phone</td>
+        <td>@item.Email</td>
+        <td>@item.Address</td>
+        <td>
+            <button onclick="@(e=>Select(item))" class="btn btn-sm btn-link @(item.Id == BranchId ? "active" : "")">Select</button>
+        </td>
+    </TableBody>
+    <FormBody Context="item">
+        <div class="form-group">
+            <label class="text-primary">Name</label>
+            <InputText bind-Value="@item.Name" Class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="text-primary">Phone</label>
+            <InputText bind-Value="@item.Phone" Class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="text-primary">Email</label>
+            <InputText bind-Value="@item.Email" Class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="text-primary">Address</label>
+            <InputTextArea bind-Value="@item.Address" Class="form-control" />
+        </div>
+    </FormBody>
+</BasePage>
