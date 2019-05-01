@@ -1,51 +1,28 @@
 version: "3"
 services:
-  traefik: # traefik proxy
-    image: traefik:alpine
-    command: --api --docker
-    ports:
-      - "80:80"
-    volumes:
-      - /docker/traefik:/etc/traefik
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - services-network
-  web.admin: # admin panel
+  admin: # admin panel
     build:
       context: ./
       dockerfile: Admin.Dockerfile
-    labels:
-      - traefik.enable=true
-      - traefik.port=80
-      - traefik.frontend.rule=Host:admin.localhost
-    environment:
-      - API_ENDPOINT=http://web.api/api/
-    networks:
-      - services-network
-  web.public:  # front-end
+    ports:
+      - 9002:80
+    environment: # not in use until official introduction of IConfiguration in Blazor by Microsoft
+      - API_ENDPOINT=http://web.api/ # to provide production API_ENDPOINT use appsettings.json in Admin/
+
+  public:  # front-end
     build:
       context: ./
       dockerfile: Public.Dockerfile
-    labels:
-      - traefik.enable=true
-      - traefik.port=80
-      - traefik.frontend.rule=Host:public.localhost
+    ports:
+      - 9001:80
     environment:
-      - API_ENDPOINT=http://web.api/api/
-    networks:
-      - services-network
-  web.api:  # web api
+      - API_ENDPOINT=http://web.api/
+
+  api:  # web api
     build:
       context: ./
       dockerfile: Api.Dockerfile
-    labels:
-      - traefik.enable=true
-      - traefik.port=80
-      - traefik.frontend.rule=Host:api.localhost
+    ports:
+      - 9000:80
     env_file:
-      - ./api.env
-    networks:
-      - services-network
-networks:
-  services-network:
-    external: true
+      - ./app.env
