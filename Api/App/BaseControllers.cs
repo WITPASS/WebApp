@@ -1,5 +1,6 @@
 ﻿using Data;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,14 +10,13 @@ using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BaseController<T> : ControllerBase where T : Entity
+    [ApiController, Route("api/[controller]"), Authorize]
+    public class EntityController<T> : ControllerBase where T : Entity
     {
         protected readonly AppDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public BaseController(AppDbContext context, DbSet<T> dbSet)
+        public EntityController(AppDbContext context, DbSet<T> dbSet)
         {
             _context = context;
             _dbSet = dbSet;
@@ -101,27 +101,50 @@ namespace Api.Controllers
         }
     }
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class WelcomeController : ControllerBase
+    public class BranchEntityController<T> : EntityController<T> where T : BranchEntity
     {
-        protected readonly AppDbContext _context;
-        public WelcomeController(AppDbContext context)
+        public BranchEntityController(AppDbContext context, DbSet<T> dbSet) : base(context, dbSet) { }
+
+        public override async Task<ActionResult<IEnumerable<T>>> Get()
         {
-            _context = context;
+            return await _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId).ToListAsync();
         }
 
-        [HttpGet]
-        public object Get()
+        public override async Task<ActionResult<T>> Get(Guid id)
         {
-            return new { Message = "Welcome" };
+            var ent = await _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId).FirstOrDefaultAsync(c => c.Id == id);
+
+            if (ent == null)
+            {
+                return NotFound();
+            }
+
+            return ent;
         }
 
-        [HttpGet, Route("update-database")]
-        public async Task<string> UpdateDatabase()
+        public override async Task<IActionResult> Put(Guid id, T ent)
         {
-            await _context.Database.MigrateAsync();
-            return "success";
+            ent.BranchId = BranchId;
+            return await base.Put(id, ent);
+        }
+
+        public override async Task<ActionResult<T>> Post(T ent)
+        {
+            ent.BranchId = BranchId;
+            return await base.Post(ent);
+        }
+
+        protected Guid BranchId
+        {
+            get
+            {
+                if (User.IsInRole("Super"))
+                {
+                    return new Guid(Request.Headers["branch"]);
+                }
+
+                return new Guid(User.Claims.Single(c => c.Type == "branch").Value);
+            }
         }
     }
 }

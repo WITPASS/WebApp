@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190426152121_Reset")]
-    partial class Reset
+    [Migration("20190430120438_First")]
+    partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,10 +31,7 @@ namespace Api.Migrations
                     b.Property<string>("Email")
                         .IsRequired();
 
-                    b.Property<string>("FirstName")
-                        .IsRequired();
-
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
                         .IsRequired();
 
                     b.Property<string>("Password");
@@ -42,6 +39,8 @@ namespace Api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
+
+                    b.HasIndex("Email");
 
                     b.ToTable("Users");
                 });
@@ -51,14 +50,16 @@ namespace Api.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("BranchId");
+                    b.Property<string>("Address");
+
+                    b.Property<string>("Email");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.HasKey("Id");
+                    b.Property<string>("Phone");
 
-                    b.HasIndex("BranchId");
+                    b.HasKey("Id");
 
                     b.ToTable("Branches");
                 });
@@ -140,13 +141,6 @@ namespace Api.Migrations
                 });
 
             modelBuilder.Entity("Data.AppUser", b =>
-                {
-                    b.HasOne("Data.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId");
-                });
-
-            modelBuilder.Entity("Data.Branch", b =>
                 {
                     b.HasOne("Data.Branch", "Branch")
                         .WithMany()

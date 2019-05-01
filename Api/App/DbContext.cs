@@ -9,6 +9,8 @@ namespace Api
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AppUser>().HasIndex(c => c.Email);
+
             base.OnModelCreating(modelBuilder);
         }
 

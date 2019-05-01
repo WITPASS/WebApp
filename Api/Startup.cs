@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Linq;
+using System.Text;
 
 namespace Api
 {
@@ -29,6 +32,26 @@ namespace Api
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
+            });
+
+            // jwt token validation
+            var key = Encoding.ASCII.GetBytes(Configuration["API_KEY"]);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                //x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
             });
 
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(ConnectionString));
@@ -55,6 +78,8 @@ namespace Api
 
             app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -68,6 +93,7 @@ namespace Api
                 routeBuilder.Select().Filter().Expand().Count().OrderBy().MaxTop(500);
             });
         }
+
         private string ConnectionString
         {
             get { return string.Format("Host={0};Database={1};Username={2};Password={3}", Configuration["DB_HOST"], Configuration["DB_NAME"], Configuration["DB_USER"], Configuration["DB_PASS"]); }
