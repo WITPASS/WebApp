@@ -26,3 +26,27 @@ window.getImageInfo = (fileInput) => {
 
     return readAsDataURL(fileInput);
 };
+
+window.localStorageSetItem = (key, value) => {
+    const setItem = (key, value) => {
+        return localStorage.setItem(key, value);
+    };
+
+    return setItem(key, value);
+};
+
+window.localStorageGetItem = (key) => {
+    const getItem = (key) => {
+        return localStorage.getItem(key);
+    };
+
+    return getItem(key);
+};
+
+window.localStorageRemoveItem = (key) => {
+    const removeItem = (key) => {
+        return localStorage.removeItem(key);
+    };
+
+    return removeItem(key);
+}

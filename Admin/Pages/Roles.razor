@@ -1,7 +1,7 @@
 @page "/roles"
 @inherits RolesComponent
 
-<BasePage Title="Roles" Items="@items" Item="@item" OnAdd="@Add" OnEdit="@((Role e)=>Edit(e))" OnDelete="@((Role e)=>DeleteAsync(e))"
+<BasePage Title="Roles" Items="@Items" Item="@Item" OnAdd="@Add" OnEdit="@((Role e)=>Edit(e))" OnDelete="@((Role e)=>DeleteAsync(e))"
           Summary="Roles are assigned to registered users." OnFormSave="@SaveAsync" OnFormCancel="@CancelAsync">
     <TableHeader>
         <th>Name</th>

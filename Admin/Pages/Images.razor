@@ -1,6 +1,6 @@
 ﻿@page "/images"
 @inherits ImagesComponent
-    <BasePage Title="Images" Items="@items" Item="@item" OnAdd="@Add" OnEdit="@((Image e)=>Edit(e))" OnDelete="@((Image e)=>DeleteAsync(e))"
+    <BasePage Title="Images" Items="@Items" Item="@Item" OnAdd="@Add" OnEdit="@((Image e)=>Edit(e))" OnDelete="@((Image e)=>DeleteAsync(e))"
               Summary="Central image collection to provide images for offers, categories and products etc." OnFormSave="@SaveAsync" OnFormCancel="@CancelAsync">
         <TableHeader>
             <th>Name</th>
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <InputImage Url="@(Http.BaseAddress+item.Url)" bind-Data="@item.Data" bind-Size="@item.Size" bind-Width="@item.Width" bind-Height="@item.Height" bind-Meta="@item.Meta" bind-Version="@item.Version" />
+                <InputImage Url="@(Api.BaseAddress+item.Url)" bind-Data="@item.Data" bind-Size="@item.Size" bind-Width="@item.Width" bind-Height="@item.Height" bind-Meta="@item.Meta" bind-Version="@item.Version" />
             </div>
         </FormBody>
     </BasePage>

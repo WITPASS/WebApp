@@ -1,26 +1,20 @@
 @page "/users"
 @inherits UsersComponent
 
-<BasePage Title="Users" Items="@items" Item="@item" OnAdd="@Add" OnEdit="@((AppUser e)=>Edit(e))" OnDelete="@((AppUser e)=>DeleteAsync(e))"
+<BasePage Title="Users" Items="@Items" Item="@Item" OnAdd="@Add" OnEdit="@((AppUser e)=>Edit(e))" OnDelete="@((AppUser e)=>DeleteAsync(e))"
           Summary="Registered users can access resources based on assigned roles." OnFormSave="@SaveAsync" OnFormCancel="@CancelAsync">
     <TableHeader>
-        <th>First Name</th>
-        <th>Last Name</th>
+        <th>Name</th>
         <th>Email</th>
     </TableHeader>
     <TableBody Context="item">
-        <td>@item.FirstName</td>
-        <td>@item.LastName</td>
+        <td>@item.Name</td>
         <td>@item.Email</td>
     </TableBody>
     <FormBody Context="item">
         <div class="form-group">
-            <label class="text-primary">First Name</label>
-            <InputText bind-Value="@item.FirstName" Class="form-control" />
-        </div>
-        <div class="form-group">
-            <label class="text-primary">Last Name</label>
-            <InputText bind-Value="@item.LastName" Class="form-control" />
+            <label class="text-primary">Name</label>
+            <InputText bind-Value="@item.Name" Class="form-control" />
         </div>
         <div class="form-group">
             <label class="text-primary">Email</label>

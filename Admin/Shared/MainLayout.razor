@@ -1,15 +1,27 @@
 ﻿@inherits LayoutComponentBase
-
+@inject ApiService Api
 <div class="sidebar">
     <NavMenu />
 </div>
 
 <div class="main">
-    <div class="top-row px-4">
-        <a class="ml-md-auto">Settings</a>
+    <div class="d-flex flex-row align-items-center justify-content-end top-row px-4">
+        @if (Api.LoggedIn)
+        {
+            <button class="btn btn-sm btn-light">@Api.User</button>
+            <button onclick="@Api.LogoutAsync" class="btn btn-sm btn-light">Logout</button>
+        }
     </div>
 
     <div class="content px-4">
         @Body
     </div>
 </div>
+
+@functions {
+    protected override async Task OnInitAsync()
+    {
+        Api.LoginInfoChanged += StateHasChanged;
+        await Api.UpdateLoginDetailAsync();
+    }
+}

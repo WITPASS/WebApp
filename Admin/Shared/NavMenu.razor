@@ -1,39 +1,75 @@
+@inject ApiService Api
+
 <div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Admin</a>
+    @if (string.IsNullOrEmpty(Api.Branch))
+    {
+        <!-- don't return default value 'Admin Panel' from Api.Branch. See its code references first -->
+        <a class="navbar-brand" href="">Admin Panel</a>
+    }
+    else
+    {
+        <a class="navbar-brand" href="">@Api.Branch</a>
+    }
     <button class="navbar-toggler" onclick="@ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
 <div class="@NavMenuCssClass" onclick="@ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="images">
-                <span class="oi oi-grid-three-up" aria-hidden="true"></span> Images
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="users">
-                <span class="oi oi-grid-three-up" aria-hidden="true"></span> Users
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="roles">
-                <span class="oi oi-grid-three-up" aria-hidden="true"></span> Roles
-            </NavLink>
-        </li>
-    </ul>
+
+    @if (Api.LoggedIn)
+    {
+        <ul class="nav flex-column">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Home
+                </NavLink>
+            </li>
+
+            @if (Api.Token.Roles.Contains("Super"))
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="branches">
+                        <span class="oi oi-grid-three-up" aria-hidden="true"></span> Branches
+                    </NavLink>
+                </li>
+            }
+
+            @if (false == string.IsNullOrEmpty(Api.Branch))
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="images">
+                        <span class="oi oi-grid-three-up" aria-hidden="true"></span> Images
+                    </NavLink>
+                </li>
+
+                @if (Api.Token.Roles.Contains("Admins"))
+                {
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="users">
+                            <span class="oi oi-grid-three-up" aria-hidden="true"></span> Users
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="roles">
+                            <span class="oi oi-grid-three-up" aria-hidden="true"></span> Roles
+                        </NavLink>
+                    </li>
+                }
+            }
+        </ul>
+    }
 </div>
 
 @functions {
     bool collapseNavMenu = true;
 
     string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    protected override void OnInit()
+    {
+        Api.LoginInfoChanged += StateHasChanged;
+    }
 
     void ToggleNavMenu()
     {

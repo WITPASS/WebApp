@@ -15,12 +15,15 @@
     [Parameter]
     EventCallback<UIMouseEventArgs> OnClick { get; set; }
 
-    async Task ConfirmAsync(UIMouseEventArgs e)
+    async Task<bool> ConfirmAsync(UIMouseEventArgs e)
     {
         var ans = await js.InvokeAsync<bool>("confirm", Ask);
         if (ans)
         {
             await OnClick.InvokeAsync(e);
+            return true;
         }
+
+        return false;
     }
 }

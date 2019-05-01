@@ -1,0 +1,33 @@
+﻿@page "/login"
+@inject ApiService Api
+<h1>Login</h1>
+
+<EditForm Model="@loginInfo" OnValidSubmit="@OnFormSave">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <lablel class="text-primary">Email</lablel>
+        <InputText bind-Value="loginInfo.Email" Class="form-control" />
+    </div>
+    <div class="form-group">
+        <lablel class="text-primary">Password</lablel>
+        <input type="password" bind="loginInfo.Password" Class="form-control" />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary" style="width:75px">Login</button>
+    </div>
+</EditForm>
+
+@functions {
+
+    LoginInfo loginInfo = new LoginInfo();
+    async Task OnFormSave()
+    {
+        var userInfo = await Api.PostAsyncUnauthorized<UserInfo, LoginInfo>("api/users/login", loginInfo);
+
+        if(userInfo != null)
+        {
+            await Api.LoginAsync(userInfo);
+        }
+    }
+}
