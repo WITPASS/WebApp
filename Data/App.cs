@@ -1,15 +1,36 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data
 {
+    public class LoginInfo
+    {
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string Password { get; set; }
+    }
+
+    public class UserInfo
+    {
+        public string Token { get; set; }
+        public string User { get; set; }
+        public string Branch { get; set; }
+    }
+
     public class Entity
     {
         public Guid Id { get; set; }
+    }
+
+    public class BranchEntity: Entity
+    {
+        [JsonIgnore]
         public virtual Branch Branch { get; set; }
 
-        [ForeignKey("Branch")]
+        [JsonIgnore, ForeignKey("Branch")]
         public Guid? BranchId { get; set; }
     }
 
@@ -17,37 +38,29 @@ namespace Data
     {
         [Required]
         public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string Address { get; set; }
     }
 
-    public class Welcome
-    {
-        public string Message { get; set; }
-    }
-
-    public class AppUser : Entity
+    public class AppUser : BranchEntity
     {
         [Required]
-        public string FirstName { get; set; }
-        [Required]
-        public string LastName { get; set; }
+        public string Name { get; set; }
         [Required]
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string Password { get; set; }// TODO: should not be fetched in SQL. Use new EF SQL syntax
 
-        public bool ShouldSerializePassword()
-        {
-            return false;
-        }
     }
 
-    public class Role : Entity
+    public class Role : BranchEntity
     {
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
     }
 
-    public class UserRole : Entity
+    public class UserRole : BranchEntity
     {
         public virtual AppUser User { get; set; }
         public virtual Role Role { get; set; }
@@ -58,7 +71,7 @@ namespace Data
         public Guid? RoleId { get; set; }
     }
 
-    public class Image : Entity
+    public class Image : BranchEntity
     {
         [Required]
         public string Name { get; set; }
@@ -70,14 +83,9 @@ namespace Data
         public string Meta { get; set; }
         public int Version { get; set; }
         public bool Active { get; set; }
-        public byte[] Data { get; set; }
+        public byte[] Data { get; set; } // TODO: should not be fetched in SQL. Use new EF SQL syntax
 
         [NotMapped]
         public string Url => $"api/images/{Id}/{Version}";
-
-        public bool ShouldSerializeData()
-        {
-            return false;
-        }
     }
 }
