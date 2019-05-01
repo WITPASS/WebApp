@@ -33,12 +33,12 @@
 else
 {
     <div class="alert alert-info" role="alert">@Action</div>
-    <EditForm Model="Item" OnValidSubmit="@OnFormSave">
+    <EditForm Model="Item">
         <DataAnnotationsValidator />
         <ValidationSummary />
         @FormBody(Item)
         <div>
-            <button type="submit" class="btn btn-primary" style="width:75px">Save</button>
+            <button onclick="@OnFormSave" class="btn btn-primary" style="width:75px">Save</button>
             <Confirm OnClick="@OnFormCancel" Ask="Are you sure you want to cancel changes?" Class="btn btn-light">Cancel</Confirm>
         </div>
     </EditForm>
