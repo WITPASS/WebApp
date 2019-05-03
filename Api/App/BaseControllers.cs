@@ -23,9 +23,9 @@ namespace Api.Controllers
         }
 
         [HttpGet, EnableQuery]
-        virtual public async Task<ActionResult<IEnumerable<T>>> Get()
+        virtual public IEnumerable<T> Get()
         {
-            return await _dbSet.AsNoTracking().ToListAsync();
+            return _dbSet.AsNoTracking();
         }
 
         [HttpGet("{id}")]
@@ -105,9 +105,9 @@ namespace Api.Controllers
     {
         public BranchEntityController(AppDbContext context, DbSet<T> dbSet) : base(context, dbSet) { }
 
-        public override async Task<ActionResult<IEnumerable<T>>> Get()
+        public override IEnumerable<T> Get()
         {
-            return await _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId).ToListAsync();
+            return _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId);
         }
 
         public override async Task<ActionResult<T>> Get(Guid id)

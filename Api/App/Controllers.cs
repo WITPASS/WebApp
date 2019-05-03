@@ -35,9 +35,9 @@ namespace Api.Controllers
         // below sql is to skip Password column
         readonly private string _sql = "select \"Id\", \"Name\", \"Email\", '' as \"Password\", \"BranchId\" from \"Users\"";
 
-        public override async Task<ActionResult<IEnumerable<AppUser>>> Get()
+        public override IEnumerable<AppUser> Get()
         {
-            return await _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId).ToListAsync();
+            return _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId);
         }
 
         public override async Task<ActionResult<AppUser>> Get(Guid id)
@@ -130,9 +130,9 @@ namespace Api.Controllers
         readonly private string _sql = "select \"Id\", \"BranchId\", \"Name\", \"Title\", \"Description\", \"Width\", \"Height\"," +
                 " \"Size\", \"Meta\", \"Version\", \"Active\", ''::bytea as \"Data\" from \"Images\"";
 
-        public override async Task<ActionResult<IEnumerable<Image>>> Get()
+        public override IEnumerable<Image> Get()
         {
-            return await _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId).ToListAsync();
+            return _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId);
         }
 
         public override async Task<ActionResult<Image>> Get(Guid id)
