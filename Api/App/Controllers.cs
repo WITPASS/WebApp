@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
+using Microsoft.AspNet.OData;
 
 namespace Api.Controllers
 {
@@ -40,16 +41,10 @@ namespace Api.Controllers
             return _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId);
         }
 
-        public override async Task<ActionResult<AppUser>> Get(Guid id)
+        public override SingleResult<AppUser> Get(Guid id)
         {
-            var ent = await _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId).FirstOrDefaultAsync(c => c.Id == id);
-
-            if (ent == null)
-            {
-                return NotFound();
-            }
-
-            return ent;
+            var result = _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId && c.Id == id);
+            return SingleResult.Create(result);
         }
 
         public override async Task<IActionResult> Put(Guid id, AppUser ent)
@@ -135,16 +130,10 @@ namespace Api.Controllers
             return _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId);
         }
 
-        public override async Task<ActionResult<Image>> Get(Guid id)
+        public override SingleResult<Image> Get(Guid id)
         {
-            var ent = await _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId).FirstOrDefaultAsync(c => c.Id == id);
-
-            if (ent == null)
-            {
-                return NotFound();
-            }
-
-            return ent;
+            var result = _dbSet.FromSql(_sql).AsNoTracking().Where(c => c.BranchId == BranchId && c.Id == id);
+            return SingleResult.Create(result);
         }
 
         public override async Task<IActionResult> Put(Guid id, Image ent)
