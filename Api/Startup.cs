@@ -101,17 +101,4 @@ namespace Api
             get { return string.Format("Host={0};Database={1};Username={2};Password={3}", Configuration["DB_HOST"], Configuration["DB_NAME"], Configuration["DB_USER"], Configuration["DB_PASS"]); }
         }
     }
-    /*
-    class JsonPropertiesResolver : DefaultContractResolver
-    {
-        protected override List<MemberInfo> GetSerializableMembers(Type objectType)
-        {
-            //Return properties that do NOT have the JsonIgnoreSerializationAttribute
-            return objectType.GetProperties()
-                             //.Where(pi => !Attribute.IsDefined(pi, typeof(JsonIgnoreAttribute)))
-                             .Where(pi => !Attribute.IsDefined(pi, typeof(JsonIgnoreSerializationAttribute)))
-                             .ToList<MemberInfo>();
-        }
-    }
-    */
 }

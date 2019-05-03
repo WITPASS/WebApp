@@ -5,8 +5,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -151,7 +153,11 @@ namespace Admin
 
         HttpContent Serialize(object obj)
         {
-            return new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json");
+            return new StringContent(JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+            {
+                ContractResolver = new NonVirtualPropertiesResolver(),
+                NullValueHandling = NullValueHandling.Ignore
+            }), Encoding.UTF8, "application/json");
         }
 
         async Task SetHeaders()
@@ -220,6 +226,17 @@ namespace Admin
             }
 
             return token;
+        }
+    }
+
+    class NonVirtualPropertiesResolver : DefaultContractResolver
+    {
+        protected override List<MemberInfo> GetSerializableMembers(Type objectType)
+        {
+            return objectType.GetProperties()
+                             //.Where(pi => !Attribute.IsDefined(pi, typeof(JsonIgnoreAttribute)))
+                             .Where(pi => pi.GetGetMethod().IsVirtual == false)
+                             .ToList<MemberInfo>();
         }
     }
 }
