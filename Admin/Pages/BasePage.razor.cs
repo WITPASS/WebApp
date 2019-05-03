@@ -22,7 +22,7 @@ namespace Admin.Pages
 
         protected override async Task OnInitAsync()
         {
-            Items = await Api.GetAsync<T>(_endpoint);
+            Items = await Api.GetAsync<T>(ListEndPoint);
         }
 
         virtual protected void Add()
@@ -39,7 +39,7 @@ namespace Admin.Pages
         {
             if (Item.Id != Guid.Empty)
             {
-                var item = await Api.GetAsync<T>(_endpoint, Item.Id);
+                var item = await Api.GetAsync<T>(SingleEndPoint, Item.Id);
                 Items.Insert(Items.IndexOf(Item), item);
                 Items.Remove(Item);
             }
@@ -65,7 +65,47 @@ namespace Admin.Pages
             }
 
             Item = null;
-            Items = await Api.GetAsync<T>(_endpoint);
+            Items = await Api.GetAsync<T>(ListEndPoint);
+        }
+
+        virtual protected string GetListODataQueryOptions()
+        {
+            return string.Empty;
+        }
+
+        virtual protected string GetSingleODataQueryOptions()
+        {
+            return string.Empty;
+        }
+
+        string ListEndPoint
+        {
+            get
+            {
+                var options = GetListODataQueryOptions();
+
+                if (string.IsNullOrEmpty(options) == false)
+                {
+                    return $"{_endpoint}?{options}";
+                }
+
+                return _endpoint;
+            }
+        }
+
+        string SingleEndPoint
+        {
+            get
+            {
+                var options = GetSingleODataQueryOptions();
+
+                if (string.IsNullOrEmpty(options) == false)
+                {
+                    return $"{_endpoint}?{options}";
+                }
+
+                return _endpoint;
+            }
         }
     }
 }
