@@ -49,7 +49,7 @@
 
     protected override void OnParametersSet()
     {
-        if (Data.Length > 0 && Meta != null)
+        if (Data != null && Data.Length > 0 && Meta != null)
         {
             var base64String = Convert.ToBase64String(Data);
             Url = $"data:{Meta};base64,{base64String}";

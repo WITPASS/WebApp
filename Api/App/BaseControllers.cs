@@ -1,5 +1,6 @@
 ﻿using Data;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,22 +24,16 @@ namespace Api.Controllers
         }
 
         [HttpGet, EnableQuery]
-        virtual public async Task<ActionResult<IEnumerable<T>>> Get()
+        virtual public IEnumerable<T> Get()
         {
-            return await _dbSet.AsNoTracking().ToListAsync();
+            return _dbSet.AsNoTracking();
         }
 
-        [HttpGet("{id}")]
-        virtual public async Task<ActionResult<T>> Get(Guid id)
+        [HttpGet("{id}"), EnableQuery]
+        virtual public SingleResult<T> Get(Guid id)
         {
-            var ent = await _dbSet.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
-
-            if (ent == null)
-            {
-                return NotFound();
-            }
-
-            return ent;
+            var result = _dbSet.AsNoTracking().Where(c => c.Id == id);
+            return SingleResult.Create(result);
         }
 
         [HttpPut("{id}")]
@@ -105,21 +100,15 @@ namespace Api.Controllers
     {
         public BranchEntityController(AppDbContext context, DbSet<T> dbSet) : base(context, dbSet) { }
 
-        public override async Task<ActionResult<IEnumerable<T>>> Get()
+        public override IEnumerable<T> Get()
         {
-            return await _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId).ToListAsync();
+            return _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId);
         }
 
-        public override async Task<ActionResult<T>> Get(Guid id)
+        public override SingleResult<T> Get(Guid id)
         {
-            var ent = await _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId).FirstOrDefaultAsync(c => c.Id == id);
-
-            if (ent == null)
-            {
-                return NotFound();
-            }
-
-            return ent;
+            var result = _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId && c.Id == id);
+            return SingleResult.Create(result);
         }
 
         public override async Task<IActionResult> Put(Guid id, T ent)

@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data
 {
+    //public class JsonIgnoreSerializationAttribute : Attribute { }
+
     public class LoginInfo
     {
         [Required]
@@ -49,7 +51,7 @@ namespace Data
         public string Name { get; set; }
         [Required]
         public string Email { get; set; }
-        public string Password { get; set; }// TODO: should not be fetched in SQL. Use new EF SQL syntax
+        public string Password { get; set; }
 
     }
 
@@ -83,7 +85,7 @@ namespace Data
         public string Meta { get; set; }
         public int Version { get; set; }
         public bool Active { get; set; }
-        public byte[] Data { get; set; } // TODO: should not be fetched in SQL. Use new EF SQL syntax
+        public byte[] Data { get; set; } // TODO: should not be fetched in SQL event with odata expand operator.
 
         [NotMapped]
         public string Url => $"api/images/{Id}/{Version}";

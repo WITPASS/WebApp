@@ -55,7 +55,9 @@ namespace Api
             });
 
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(ConnectionString));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()/*.AddJsonOptions(options=> {
+                options.SerializerSettings.ContractResolver = new JsonPropertiesResolver();
+            })*/.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddOData();
             services.AddSwaggerGen(c =>
             {
