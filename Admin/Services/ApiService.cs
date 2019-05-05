@@ -43,13 +43,25 @@ namespace Admin
             _utils = utils;
         }
 
-        internal async Task<IList<T>> GetAsync<T>(string endpoint)
+        // TODO: string odata options will be replaced with key/value odata options
+        string getOdataUrl(string url, string odataOptions)
+        {
+            if (string.IsNullOrEmpty(odataOptions) == false)
+            {
+                return $"{url}?{odataOptions}";
+            }
+
+            return url;
+        }
+
+        internal async Task<IList<T>> GetAsync<T>(string endpoint, string odataOptions = null)
         {
             await SetHeaders();
-            var res = await _httpClient.GetAsync(endpoint);
+            var url = getOdataUrl(endpoint, odataOptions);
+            var res = await _httpClient.GetAsync(url);
             CheckAuthorizedStatusCode(res.StatusCode);
 
-            if(res.StatusCode != HttpStatusCode.OK)
+            if (res.StatusCode != HttpStatusCode.OK)
             {
                 // TODO: raise notification
                 return new List<T>();
@@ -58,10 +70,11 @@ namespace Admin
             return await Deserialize<IList<T>>(res.Content);
         }
 
-        internal async Task<T> GetAsync<T>(string endpoint, Guid id)
+        internal async Task<T> GetAsync<T>(string endpoint, Guid id, string odataOptions = null)
         {
             await SetHeaders();
-            var res = await _httpClient.GetAsync($"{endpoint}/{id.ToString()}");
+            var url = getOdataUrl($"{endpoint}/{id.ToString()}", odataOptions);
+            var res = await _httpClient.GetAsync(url);
             CheckAuthorizedStatusCode(res.StatusCode);
 
             if (res.StatusCode != HttpStatusCode.OK)
@@ -79,7 +92,7 @@ namespace Admin
             var res = await _httpClient.PutAsync($"{endpoint}/{id.ToString()}", Serialize(item));
             CheckAuthorizedStatusCode(res.StatusCode);
 
-            if(res.StatusCode != HttpStatusCode.NoContent)
+            if (res.StatusCode != HttpStatusCode.NoContent)
             {
                 // TODO: raise notification
             }
@@ -91,7 +104,7 @@ namespace Admin
             var res = await _httpClient.PostAsync(endpoint, Serialize(item));
             CheckAuthorizedStatusCode(res.StatusCode);
 
-            if(res.StatusCode != HttpStatusCode.Created)
+            if (res.StatusCode != HttpStatusCode.Created)
             {
                 // TODO: raise notification
                 return default;
@@ -138,7 +151,7 @@ namespace Admin
             {
                 _uriHelper.NavigateTo(_loginPath);
             }
-            else if(code == HttpStatusCode.Forbidden)
+            else if (code == HttpStatusCode.Forbidden)
             {
                 // TODO: raise notification
             }
