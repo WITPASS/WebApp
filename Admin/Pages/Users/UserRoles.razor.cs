@@ -10,8 +10,9 @@ namespace Admin.Pages
     {
         public UserRolesComponent() : base("api/userroles") { }
 
-        public IList<Role> Roles { get; set; }
-        public AppUser User { get; set; }
+        protected IList<Role> Roles { get; set; }
+        protected AppUser User { get; set; }
+        protected string Title { get; set; } = "User Roles";
 
         [Parameter]
         protected string UserId { get; set; }
@@ -21,6 +22,7 @@ namespace Admin.Pages
             await base.OnInitAsync();
             Roles = await Api.GetAsync<Role>("api/roles");
             User = await Api.GetAsync<AppUser>("api/users", new Guid(UserId));
+            Title = $"{User.Name} Roles";
         }
 
         protected override string GetListODataOptions()

@@ -1,7 +1,7 @@
 @page "/users/{userid}/roles"
 @inherits UserRolesComponent
 
-<BasePage Title="User Roles" Items="@Items" Item="@Item" OnAdd="@Add" OnEdit="@((UserRole e)=>Edit(e))" OnDelete="@((UserRole e)=>DeleteAsync(e))"
+<BasePage Title="@Title" Items="@Items" Item="@Item" OnAdd="@Add" OnEdit="@((UserRole e)=>Edit(e))" OnDelete="@((UserRole e)=>DeleteAsync(e))"
           Summary="Assigned roles for user." OnFormSave="@SaveAsync" OnFormCancel="@CancelAsync">
     <TableHeader>
         <th>Name</th>
