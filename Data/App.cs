@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -53,6 +54,7 @@ namespace Data
         public string Email { get; set; }
         public string Password { get; set; }
 
+        public virtual IList<UserRole> UserRoles { get; set; }
     }
 
     public class Role : BranchEntity
@@ -60,6 +62,8 @@ namespace Data
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public virtual IList<UserRole> UserRoles { get; set; }
     }
 
     public class UserRole : BranchEntity

@@ -1,0 +1,26 @@
+@page "/users/{userid}/roles"
+@inherits UserRolesComponent
+
+<BasePage Title="User Roles" Items="@Items" Item="@Item" OnAdd="@Add" OnEdit="@((UserRole e)=>Edit(e))" OnDelete="@((UserRole e)=>DeleteAsync(e))"
+          Summary="Assigned roles for user." OnFormSave="@SaveAsync" OnFormCancel="@CancelAsync">
+    <TableHeader>
+        <th>Name</th>
+        <th>Description</th>
+    </TableHeader>
+    <TableBody Context="item">
+        <td>@item.Role.Name</td>
+        <td>@item.Role.Description</td>
+    </TableBody>
+    <FormBody Context="item">
+        <div class="form-group">
+            <label class="text-primary">Name</label>
+            <MyInputSelect bind-Value="@item.RoleId" Class="form-control">
+                <option value="">-- select role --</option>
+                @foreach (var role in Roles)
+                {
+                    <option value="@role.Id">@role.Name</option>
+                }
+            </MyInputSelect>
+        </div>
+    </FormBody>
+</BasePage>
