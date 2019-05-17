@@ -1,8 +1,16 @@
 @page "/branches"
 @inherits BranchesComponent
+@using Blazor.Fluxor
+@using Store
+@inject IState<AppState> AppState
+@inject IDispatcher Dispatcher
 
 <BasePage Title="Branches" Items="@Items" Item="@Item" OnAdd="@Add" OnEdit="@((Branch e)=>Edit(e))" OnDelete="@((Branch e)=>DeleteAsync(e))"
           Summary="Each branch has its own resources including branch admin and users." OnFormSave="@SaveAsync" OnFormCancel="@CancelAsync">
+    <TopControls>
+        <button onclick="@(e=>Dispatcher.Dispatch(new IncrementCounterAction()));"></button>
+        @AppState.Value.ClickCount
+    </TopControls>
     <TableHeader>
         <th>Name</th>
         <th>Phone</th>

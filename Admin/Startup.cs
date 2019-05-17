@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using Blazor.Fluxor;
 
 namespace Admin
 {
@@ -40,6 +41,7 @@ namespace Admin
 
             services.AddSingleton(typeof(ApiService));
             services.AddSingleton(typeof(UtilsService));
+            services.AddFluxor(options => options.UseDependencyInjection(typeof(Startup).Assembly));
         }
 
         public void Configure(IComponentsApplicationBuilder app)
