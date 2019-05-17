@@ -11,7 +11,14 @@
     {
         if (currValue != prevValue)
         {
-            await ValueChanged.InvokeAsync(new Guid(currValue));
+            Guid? value = null;
+
+            if(!string.IsNullOrEmpty(currValue))
+            {
+                value = new Guid(currValue);
+            }
+
+            await ValueChanged.InvokeAsync(value);
             //Console.WriteLine($"value changed from '{prevValue}' to '{currValue}'");
             prevValue = currValue;
         }
