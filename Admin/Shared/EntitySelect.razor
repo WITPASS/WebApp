@@ -1,0 +1,95 @@
+﻿@typeparam TItem
+<div class="form-group">
+    <label class="text-primary">@Label</label>
+    <select bind="currValue" onclick="@ValueChangedAsync" Class="form-control">
+        <option value="null">--- select @Label.ToLower() ---</option>
+        @foreach (var m in DataSource)
+        {
+            <option value="@BindingValue(m)">@DisplayValue(m)</option>
+        }
+    </select>
+</div>
+@functions {
+
+    string currValue = string.Empty;
+    string prevValue = string.Empty;
+
+    async Task ValueChangedAsync()
+    {
+        if (currValue != prevValue)
+        {
+            Guid value;
+
+            if (Guid.TryParse(currValue, out value))
+            {
+                await ValueChanged.InvokeAsync(value);
+            }
+            else
+            {
+                await ValueChanged.InvokeAsync(null);
+            }
+
+            prevValue = currValue;
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Value != null && Value != Guid.Empty)
+        {
+            currValue = prevValue = Value.ToString();
+            //Console.WriteLine($"on param set called with value: '{currValue}'");
+        }
+    }
+
+    [Parameter]
+    string Label { get; set; }
+
+    [Parameter]
+    string BindingColumn { get; set; } = "Id";
+
+    [Parameter]
+    string DisplayColumn { get; set; } = "Name";
+
+    [Parameter]
+    Guid? Value { get; set; }
+
+    [Parameter]
+    EventCallback<Guid?> ValueChanged { get; set; }
+
+    [Parameter]
+    IList<TItem> DataSource { get; set; }
+
+    string BindingValue(TItem ent)
+    {
+        return GetBindingProperty(ent).GetValue(ent).ToString();
+    }
+
+    string DisplayValue(TItem ent)
+    {
+        return GetDisplayProperty(ent).GetValue(ent).ToString();
+    }
+
+    System.Reflection.PropertyInfo _displayProp;
+    System.Reflection.PropertyInfo _bindProp;
+
+    System.Reflection.PropertyInfo GetBindingProperty(TItem ent)
+    {
+        if (_bindProp == null)
+        {
+            _bindProp = ent.GetType().GetProperty(BindingColumn);
+        }
+
+        return _bindProp;
+    }
+
+    System.Reflection.PropertyInfo GetDisplayProperty(TItem ent)
+    {
+        if (_displayProp == null)
+        {
+            _displayProp = ent.GetType().GetProperty(DisplayColumn);
+        }
+
+        return _displayProp;
+    }
+}

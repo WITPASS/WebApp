@@ -1,0 +1,48 @@
+﻿<select bind="currValue" onclick="@ValueChangedAsync" class="@Class">@ChildContent</select>
+
+@functions {
+
+    string currValue = string.Empty;
+    string prevValue = string.Empty;
+
+    // onchange and onselectionchange events not working in dotnet core 3 preview 4
+
+    async Task ValueChangedAsync()
+    {
+        if (currValue != prevValue)
+        {
+            Guid value;
+
+            if (Guid.TryParse(currValue, out value))
+            {
+                await ValueChanged.InvokeAsync(value);
+            }
+            else
+            {
+                await ValueChanged.InvokeAsync(null);
+            }
+
+            prevValue = currValue;
+        }
+    }
+
+    [Parameter]
+    Guid? Value { get; set; }
+
+    [Parameter]
+    EventCallback<Guid?> ValueChanged { get; set; }
+
+    [Parameter]
+    string Class { get; set; }
+
+    [Parameter]
+    RenderFragment ChildContent { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (Value != null && Value != Guid.Empty)
+        {
+            currValue = prevValue = Value.ToString();
+        }
+    }
+}

@@ -1,0 +1,48 @@
+﻿@typeparam TItem
+<div class="form-group">
+    <label class="text-primary">@Label</label>
+    <select bind="currValue" onclick="@ValueChangedAsync" Class="form-control">
+        @foreach (var m in EnumSource)
+        {
+            <option value="@m">@m</option>
+        }
+    </select>
+</div>
+@functions {
+
+    [Parameter]
+    string Label { get; set; }
+
+    [Parameter]
+    IList<TItem> EnumSource { get; set; }
+
+    string currValue = string.Empty;
+    string prevValue = string.Empty;
+
+    // onchange and onselectionchange events not working in dotnet core 3 preview 4
+
+    async Task ValueChangedAsync()
+    {
+        if (currValue != prevValue)
+        {
+            TItem value = (TItem)Enum.Parse(typeof(TItem), currValue);
+
+            await ValueChanged.InvokeAsync(value);
+            //Console.WriteLine($"value changed from '{prevValue}' to '{currValue}'");
+            prevValue = currValue;
+        }
+    }
+
+    [Parameter]
+    TItem Value { get; set; }
+
+    [Parameter]
+    EventCallback<TItem> ValueChanged { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        currValue = prevValue = Value.ToString();
+        //Console.WriteLine($"on param set called with value: '{currValue}'");
+    }
+}
