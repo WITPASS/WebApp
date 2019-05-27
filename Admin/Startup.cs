@@ -41,7 +41,14 @@ namespace Admin
 
             services.AddSingleton(typeof(ApiService));
             services.AddSingleton(typeof(UtilsService));
-            services.AddFluxor(options => options.UseDependencyInjection(typeof(Startup).Assembly));
+            services.AddFluxor(options =>
+            options
+            .UseDependencyInjection(typeof(Startup).Assembly)
+            .AddMiddleware<Blazor.Fluxor.ReduxDevTools.ReduxDevToolsMiddleware>()
+            .AddMiddleware<Blazor.Fluxor.Routing.RoutingMiddleware>());
+            services.AddScoped<Store.NavState>();
+
+
         }
 
         public void Configure(IComponentsApplicationBuilder app)
