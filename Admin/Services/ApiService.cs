@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Admin.Store;
 
 namespace Admin.Services
 {
@@ -25,14 +26,22 @@ namespace Admin.Services
 
         internal Uri BaseAddress => _httpClient.BaseAddress;
 
-        /************ login info ***************/
-        internal JwToken Token { get; private set; }
         internal string Branch { get; set; } = string.Empty;
         /** When set is passed to api server in request header. Super Admin can select a branch */
         internal Guid BranchId { get; set; } = Guid.Empty;
-        internal string User { get; private set; } = string.Empty;
-        internal bool LoggedIn { get; private set; } = false;
-        /****************************************/
+
+        internal void SaveLocal(string label, Branch value)
+        {
+            var valueJsonString = SerializeToString(value);
+            _jsRuntime.InvokeAsync<object>("localStorageSetItem", label, valueJsonString);
+        }
+
+        async internal Task<T> LoadLocal<T>(string label)
+        {
+            string obj = await _jsRuntime.InvokeAsync<string>("localStorageGetItem", label);
+            return JsonConvert.DeserializeObject<T>(obj);
+        }
+
         internal event Action LoginInfoChanged;
 
         public ApiService(HttpClient httpClient, IUriHelper uriHelper, IJSRuntime jsRuntime, UtilsService utils)
@@ -166,11 +175,15 @@ namespace Admin.Services
 
         HttpContent Serialize(object obj)
         {
-            return new StringContent(JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+            return new StringContent(SerializeToString(obj), Encoding.UTF8, "application/json");
+        }
+        string SerializeToString(object obj)
+        {
+            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
             {
                 ContractResolver = new NonVirtualPropertiesResolver(),
                 NullValueHandling = NullValueHandling.Ignore
-            }), Encoding.UTF8, "application/json");
+            });
         }
 
         async Task SetHeaders()
@@ -187,7 +200,7 @@ namespace Admin.Services
 
         internal async Task LoginAsync(UserInfo userInfo)
         {
-            await _jsRuntime.InvokeAsync<object>("localStorageSetItem", "branch", userInfo.Branch);
+            await _jsRuntime.InvokeAsync<object>("localStorageSetItem", "branchName", userInfo.Branch);
             await _jsRuntime.InvokeAsync<object>("localStorageSetItem", "user", userInfo.User);
             await _jsRuntime.InvokeAsync<object>("localStorageSetItem", "token", userInfo.Token);
 
@@ -198,35 +211,30 @@ namespace Admin.Services
 
         internal async Task LogoutAsync()
         {
-            await _jsRuntime.InvokeAsync<object>("localStorageRemoveItem", "branch");
+            await _jsRuntime.InvokeAsync<object>("localStorageRemoveItem", "branchName");
             await _jsRuntime.InvokeAsync<object>("localStorageRemoveItem", "user");
             await _jsRuntime.InvokeAsync<object>("localStorageRemoveItem", "token");
 
             _uriHelper.NavigateTo(_loginPath);
 
-            Token = null;
             Branch = string.Empty;
             BranchId = Guid.Empty;
-            User = string.Empty;
-            LoggedIn = false;
-            LoginInfoHasChanaged();
         }
 
-        internal async Task UpdateLoginDetailAsync()
+        internal async Task<UserInfo> UpdateLoginDetailAsync()
         {
             var token = await GetTokenAsync();
-
+            UserInfo userInfo = null;
             if (token != null)
             {
-                Token = _utils.ParseJwt(token);
-                Branch = await _jsRuntime.InvokeAsync<string>("localStorageGetItem", "branch");
-                User = await _jsRuntime.InvokeAsync<string>("localStorageGetItem", "user");
-                LoggedIn = true;
-                LoginInfoHasChanaged();
+                userInfo = new UserInfo();
+                userInfo.Token = token;
+                userInfo.Branch = Branch = await _jsRuntime.InvokeAsync<string>("localStorageGetItem", "branchName");
+                userInfo.User = await _jsRuntime.InvokeAsync<string>("localStorageGetItem", "user");
             }
+            return userInfo;
         }
 
-        internal void LoginInfoHasChanaged() => LoginInfoChanged?.Invoke();
 
         async Task<string> GetTokenAsync()
         {

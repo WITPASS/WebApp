@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using Blazor.Fluxor;
 
 namespace Admin
 {
@@ -42,6 +43,14 @@ namespace Admin
             services.AddSingleton(typeof(ApiService));
             services.AddSingleton(typeof(UtilsService));
             services.AddSingleton(typeof(DialogService));
+            services.AddFluxor(options =>
+            options
+            .UseDependencyInjection(typeof(Startup).Assembly)
+            .AddMiddleware<Blazor.Fluxor.ReduxDevTools.ReduxDevToolsMiddleware>()
+            .AddMiddleware<Blazor.Fluxor.Routing.RoutingMiddleware>());
+            services.AddScoped<Store.NavState>();
+
+
         }
 
         public void Configure(IComponentsApplicationBuilder app)

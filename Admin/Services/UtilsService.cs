@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Admin.Services
 {
-    internal class JwToken
+    public class JwToken
     {
         public JwToken(JObject jwt)
         {

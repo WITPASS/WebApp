@@ -1,5 +1,9 @@
 @page "/branches"
 @inherits BranchesComponent
+@using Blazor.Fluxor
+@using Store
+@inject IState<NavState> AppState
+@inject IDispatcher Dispatcher
 
 <BasePage Title="Branches" Items="@Items" Item="@Item" OnAdd="@Add" OnEdit="@((Branch e)=>Edit(e))" OnDelete="@((Branch e)=>DeleteAsync(e))"
           Summary="Each branch has its own resources including branch admin and users." OnFormSave="@SaveAsync" OnFormCancel="@CancelAsync">
@@ -16,7 +20,7 @@
         <td>@item.Email</td>
         <td>@item.Address</td>
         <td>
-            <button onclick="@(e=>Select(item))" class="btn btn-sm btn-link @(item.Id == BranchId ? "active" : "")">Select</button>
+            <button onclick="@(e=>Dispatcher.Dispatch(new ActionSetBranch(item)))" class="btn btn-sm btn-link @(AppState.Value.Branch.Id == item.Id ? "active" : "")">Select</button>
         </td>
     </TableBody>
     <FormBody Context="item">

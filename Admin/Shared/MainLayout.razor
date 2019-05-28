@@ -1,5 +1,11 @@
 ﻿@inherits LayoutComponentBase
+@inject Blazor.Fluxor.IStore Store
 @inject ApiService Api
+@using Blazor.Fluxor
+@using Store
+@inject IState<LoginState> LoginState
+@inject IDispatcher Dispatcher
+@Store.Initialize()
 
 <Dialog />
 
@@ -9,10 +15,10 @@
 
 <div class="main">
     <div class="d-flex flex-row align-items-center justify-content-end top-row px-4">
-        @if (Api.LoggedIn)
+        @if (LoginState.Value.LoggedIn)
         {
-            <button class="btn btn-sm btn-light">@Api.User</button>
-            <button onclick="@Api.LogoutAsync" class="btn btn-sm btn-light">Logout</button>
+            <button class="btn btn-sm btn-light">@LoginState.Value.UserInfo.User</button>
+            <button onclick="@Logout" class="btn btn-sm btn-light">Logout</button>
         }
     </div>
 
@@ -20,11 +26,23 @@
         @Body
     </div>
 </div>
-
 @functions {
+     protected override void OnInit()
+    {
+        base.OnInit();
+        LoginState.Subscribe(this);
+    }
     protected override async Task OnInitAsync()
     {
-        Api.LoginInfoChanged += StateHasChanged;
-        await Api.UpdateLoginDetailAsync();
+        var userInfo = await Api.UpdateLoginDetailAsync();
+        var branch = await Api.LoadLocal<Branch>("branch");
+        Dispatcher.Dispatch(new ActionLogin(userInfo));
+        Dispatcher.Dispatch(new ActionSetBranch(branch));
+        StateHasChanged();
+    }
+    protected async Task Logout()
+    {
+        Dispatcher.Dispatch(new ActionLogout());
+        await Api.LogoutAsync();
     }
 }

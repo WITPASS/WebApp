@@ -1,5 +1,9 @@
 ﻿@page "/login"
 @inject ApiService Api
+@using Blazor.Fluxor
+@using Store
+@inject IState<NavState> AppState
+@inject IDispatcher Dispatcher
 <h1>Login</h1>
 
 <EditForm Model="@loginInfo" OnValidSubmit="@OnFormSave">
@@ -25,8 +29,9 @@
     {
         var userInfo = await Api.PostAsyncUnauthorized<UserInfo, LoginInfo>("api/users/login", loginInfo);
 
-        if(userInfo != null)
+        if (userInfo != null)
         {
+            Dispatcher.Dispatch(new ActionLogin(userInfo));
             await Api.LoginAsync(userInfo);
         }
     }
