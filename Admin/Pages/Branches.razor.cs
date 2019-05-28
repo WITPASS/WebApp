@@ -1,6 +1,7 @@
 ﻿using Data;
 using System;
 using System.Threading.Tasks;
+using Admin.Shared;
 
 namespace Admin.Pages
 {
