@@ -1,0 +1,19 @@
+@inherits DialogBase
+
+<div class="bm-container @(IsVisible ? "bm-active" : string.Empty)">
+
+    <div class="bm-overlay" onclick="@(e=>CloseModal(false))"></div>
+
+    <div class="blazor-modal">
+        <div class="bm-header">
+            <h3 class="bm-title">@Title</h3>
+            <button type="button" class="bm-close" onclick="@(e=>CloseModal(false))">
+                <span>&times;</span>
+            </button>
+        </div>
+        <div class="bm-content">
+            @Content
+        </div>
+    </div>
+
+</div>

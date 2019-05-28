@@ -1,0 +1,27 @@
+@typeparam TItem
+@if (Item != null)
+{
+    <EditForm Model="Item" OnValidSubmit="OnFormSave">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        @FormBody(Item)
+        <div>
+            <button type="submit" class="btn btn-primary btn-sm" style="width:75px">Save</button>
+            <Confirm OnClick="@OnFormCancel" Ask="Are you sure you want to cancel changes?" Class="btn btn-light">Cancel</Confirm>
+        </div>
+    </EditForm>
+}
+
+@functions {
+    [Parameter]
+    TItem Item { get; set; }
+
+    [Parameter]
+    RenderFragment<TItem> FormBody { get; set; }
+
+    [Parameter]
+    EventCallback OnFormSave { get; set; }
+
+    [Parameter]
+    EventCallback OnFormCancel { get; set; }
+}
