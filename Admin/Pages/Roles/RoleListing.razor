@@ -1,0 +1,14 @@
+@page "/roles"
+@inherits RoleListingBase
+
+<EntityListing Title="Roles" Items="@Items" OnAdd="@Add" OnEdit="@((Role e)=>Edit(e))" OnDelete="@((Role e)=>DeleteAsync(e))"
+          Summary="Roles are assigned to registered users.">
+    <TableHeader>
+        <th>Name</th>
+        <th>Description</th>
+    </TableHeader>
+    <TableBody Context="item">
+        <td>@item.Name</td>
+        <td>@item.Description</td>
+    </TableBody>
+</EntityListing>

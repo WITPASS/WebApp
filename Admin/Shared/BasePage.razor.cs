@@ -1,10 +1,11 @@
-﻿using Data;
+﻿using Admin.Services;
+using Data;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Admin.Pages
+namespace Admin.Shared
 {
     public class BaseComponent<T> : ComponentBase where T : Entity
     {

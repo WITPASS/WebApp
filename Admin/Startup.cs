@@ -1,3 +1,4 @@
+using Admin.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +41,7 @@ namespace Admin
 
             services.AddSingleton(typeof(ApiService));
             services.AddSingleton(typeof(UtilsService));
+            services.AddSingleton(typeof(DialogService));
         }
 
         public void Configure(IComponentsApplicationBuilder app)

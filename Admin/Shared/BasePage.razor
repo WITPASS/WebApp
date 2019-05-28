@@ -1,14 +1,14 @@
 ﻿@typeparam TItem
-<h1>@Title</h1>
+<h3>@Title</h3>
 @if (Item == null)
 {
     <p>@Summary</p>
     <div style="margin-bottom:4px">
-        <button onclick="@OnAdd" class="btn btn-primary">Add New</button>
+        <button onclick="@OnAdd" class="btn btn-primary btn-sm">Add New</button>
         @TopControls
     </div>
     <div class="table-responsive">
-        <table class="table table-hover">
+        <table class="table table-sm table-hover">
             <thead class="thead-light">
                 <tr>
                     @TableHeader
@@ -38,7 +38,7 @@ else
         <ValidationSummary />
         @FormBody(Item)
         <div>
-            <button onclick="@OnFormSave" class="btn btn-primary" style="width:75px">Save</button>
+            <button onclick="@OnFormSave" class="btn btn-primary btn-sm" style="width:75px">Save</button>
             <Confirm OnClick="@OnFormCancel" Ask="Are you sure you want to cancel changes?" Class="btn btn-light">Cancel</Confirm>
         </div>
     </EditForm>
