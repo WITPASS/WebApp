@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Admin
+namespace Admin.Services
 {
     public class ApiService
     {
