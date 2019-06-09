@@ -63,7 +63,7 @@ namespace Api.Controllers
         {
             var config = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
 
-            var user = _dbSet.AsNoTracking().Include(c=>c.Branch).FirstOrDefault(c => c.Email == login.Email && c.Password == login.Password);
+            var user = _dbSet.AsNoTracking().Include(c => c.Branch).FirstOrDefault(c => c.Email == login.Email && c.Password == login.Password);
 
             if (user == null) return BadRequest("email or password is incorrect");
 
@@ -79,12 +79,17 @@ namespace Api.Controllers
             }
         }
 
-        private UserInfo GetToken(string key, string subject, string user, Branch branch, IEnumerable<string> roles)
+        private UserInfo GetToken(string key, string subject, string userName, Branch branch, IEnumerable<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var bytes = Encoding.ASCII.GetBytes(key);
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, subject), new Claim("branch", branch == null ? string.Empty : branch.Id.ToString()) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, subject) };
+
+            if (branch != null)
+            {
+                claims.Add(new Claim("branchid", branch.Id.ToString()));
+            }
 
             claims.AddRange(roles.Select(c =>
             {
@@ -102,8 +107,8 @@ namespace Api.Controllers
 
             var userInfo = new UserInfo
             {
-                Branch = branch == null ? string.Empty : branch.Name,
-                User = user,
+                BranchName = branch == null ? string.Empty : branch.Name,
+                UserName = userName,
                 Token = tokenHandler.WriteToken(token)
             };
 

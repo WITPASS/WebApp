@@ -1,10 +1,12 @@
 ﻿@page "/login"
-@inject ApiService Api
-@using Blazor.Fluxor
-@using Store
-@inject IState<NavState> AppState
+@inject IState<AppState> AppState
 @inject IDispatcher Dispatcher
 <h1>Login</h1>
+
+@if(AppState.Value.Error != null)
+{
+    <div class="alert-danger">@AppState.Value.Error</div>
+}
 
 <EditForm Model="@loginInfo" OnValidSubmit="@OnFormSave">
     <DataAnnotationsValidator />
@@ -18,21 +20,15 @@
         <input type="password" bind="loginInfo.Password" Class="form-control" />
     </div>
     <div>
-        <button type="submit" class="btn btn-primary" style="width:75px">Login</button>
+        <button type="submit" class="btn btn-primary" disabled="@AppState.Value.LoggingIn" style="width:75px">Login</button>
     </div>
 </EditForm>
 
 @functions {
-
     LoginInfo loginInfo = new LoginInfo();
-    async Task OnFormSave()
-    {
-        var userInfo = await Api.PostAsyncUnauthorized<UserInfo, LoginInfo>("api/users/login", loginInfo);
 
-        if (userInfo != null)
-        {
-            Dispatcher.Dispatch(new ActionLogin(userInfo));
-            await Api.LoginAsync(userInfo);
-        }
+    void OnFormSave()
+    {
+        Dispatcher.Dispatch(new LoginAction(loginInfo));
     }
 }

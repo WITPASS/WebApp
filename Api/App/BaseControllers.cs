@@ -129,10 +129,10 @@ namespace Api.Controllers
             {
                 if (User.IsInRole("Super"))
                 {
-                    return new Guid(Request.Headers["branch"]);
+                    return new Guid(Request.Headers["branchid"]);
                 }
 
-                return new Guid(User.Claims.Single(c => c.Type == "branch").Value);
+                return new Guid(User.Claims.Single(c => c.Type == "branchid").Value);
             }
         }
     }
