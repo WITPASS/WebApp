@@ -3,22 +3,22 @@
 @inject IDispatcher Dispatcher
 
 <div class="top-row pl-4 navbar navbar-dark">
-    @if (AppState.Value.LoggedIn && AppState.Value.Branch != null)
+    @if (AppState.Value.IsLoggedIn && AppState.Value.AppBranch != null)
     {
-        <a class="navbar-brand" href="">@AppState.Value.Branch.Name</a>
+        <a class="navbar-brand" href="">@AppState.Value.AppBranch.Name</a>
     }
     else
     {
         <a class="navbar-brand" href="">Admin Panel</a>
     }
-    <button class="navbar-toggler" onclick="@ToggleNavMenu">
+    <button class="navbar-toggler" @onclick="@ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
-<div class="@NavMenuCssClass" onclick="@ToggleNavMenu">
+<div class="@NavMenuCssClass" @onclick="@ToggleNavMenu">
 
-    @if (AppState.Value.LoggedIn)
+    @if (AppState.Value.IsLoggedIn)
     {
         <ul class="nav flex-column">
             <li class="nav-item px-3">
@@ -26,7 +26,7 @@
                     <span class="oi oi-home" aria-hidden="true"></span> Home
                 </NavLink>
             </li>
-            @if (AppState.Value.Roles.Contains("Super"))
+            @if (AppState.Value.AppUserRoles.Contains("Super"))
             {
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="branches">
@@ -35,7 +35,7 @@
                 </li>
             }
 
-            @if (AppState.Value.Branch != null)
+            @if (AppState.Value.AppBranch != null)
             {
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="images">
@@ -43,7 +43,7 @@
                     </NavLink>
                 </li>
 
-                @if (AppState.Value.Roles.Contains("Admins"))
+                @if (AppState.Value.AppUserRoles.Contains("Admins"))
                 {
                     <li class="nav-item px-3">
                         <NavLink class="nav-link" href="users">
@@ -61,7 +61,7 @@
     }
 </div>
 
-@functions {
+@code {
     bool collapseNavMenu = true;
 
     string NavMenuCssClass => collapseNavMenu ? "collapse" : null;

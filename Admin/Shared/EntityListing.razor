@@ -2,7 +2,7 @@
 <h3>@Title</h3>
 <p>@Summary</p>
 <div style="margin-bottom:4px">
-    <button onclick="@OnAdd" class="btn btn-primary btn-sm">Add New</button>
+    <button @onclick="@OnAdd" class="btn btn-primary btn-sm">Add New</button>
     @TopControls
 </div>
 <div class="table-responsive">
@@ -19,7 +19,7 @@
                 <tr>
                     @TableBody(item)
                     <td>
-                        <button onclick="@(async ()=> await OnEdit.InvokeAsync(item))" class="btn btn-link btn-sm">Edit</button>
+                        <button @onclick="@(async ()=> await OnEdit.InvokeAsync(item))" class="btn btn-link btn-sm">Edit</button>
                         <Confirm OnClick="@(async ()=> await OnDelete.InvokeAsync(item))" Ask="Are you sure you want to delete?">Delete</Confirm>
                     </td>
                 </tr>
@@ -27,7 +27,7 @@
         </tbody>
     </table>
 </div>
-@functions {
+@code {
     [Parameter]
     string Title { get; set; }
 

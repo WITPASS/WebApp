@@ -1,8 +1,8 @@
 ﻿@inject IJSRuntime js
 <img width="@Width" height="@Height" src="@Url" class="@Class" />
-<input ref="inputFile" class="form-control" type="file" onchange="@ImageSelected" />
+<input @ref="inputFile" class="form-control" type="file" @onchange="@ImageSelected" />
 
-@functions {
+@code {
     ElementRef inputFile;
 
     [Parameter]

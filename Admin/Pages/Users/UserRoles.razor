@@ -14,7 +14,7 @@
     <FormBody Context="item">
         <div class="form-group">
             <label class="text-primary">Name</label>
-            <MyInputSelect bind-Value="@item.RoleId" Class="form-control">
+            <MyInputSelect @bind-Value="@item.RoleId" Class="form-control">
                 <option value="">-- select role --</option>
                 @foreach (var role in Roles)
                 {

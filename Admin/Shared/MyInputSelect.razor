@@ -1,6 +1,6 @@
-﻿<select bind="currValue" onclick="@ValueChangedAsync" class="@Class">@ChildContent</select>
+﻿<select bind="currValue" @onclick="@ValueChangedAsync" class="@Class">@ChildContent</select>
 
-@functions {
+@code {
 
     string currValue = string.Empty;
     string prevValue = string.Empty;

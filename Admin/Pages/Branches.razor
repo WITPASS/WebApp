@@ -18,7 +18,7 @@
         <td>@item.Email</td>
         <td>@item.Address</td>
         <td>
-            <button onclick="@(e=>Dispatcher.Dispatch(new SetBranchAction(item)))" class="btn btn-sm btn-link @(AppState.Value.Branch?.Id == item.Id ? "active" : "")">Select</button>
+            <button @onclick="@(e=>Dispatcher.Dispatch(new SetBranchAction(item)))" class="btn btn-sm btn-link @(AppState.Value.AppBranch?.Id == item.Id ? "active" : "")">Select</button>
         </td>
     </TableBody>
     <FormBody Context="item">

@@ -1,8 +1,8 @@
 ﻿@inject IJSRuntime js
 
-<button type="button" onclick="@(e=>ConfirmAsync(e))" class="btn btn-primary btn-sm">@ChildContent</button>
+<button type="button" @onclick="@(e=>ConfirmAsync(e))" class="btn btn-primary btn-sm">@ChildContent</button>
 
-@functions {
+@code {
     [Parameter]
     string Ask { get; set; }
 

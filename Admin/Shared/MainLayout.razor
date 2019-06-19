@@ -12,10 +12,10 @@
 
 <div class="main">
     <div class="d-flex flex-row align-items-center justify-content-end top-row px-4">
-        @if (AppState.Value.LoggedIn)
+        @if (AppState.Value.IsLoggedIn)
         {
-            <button class="btn btn-sm btn-light">@AppState.Value.UserInfo.UserName</button>
-            <button onclick="@Logout" class="btn btn-sm btn-light">Logout</button>
+            <button class="btn btn-sm btn-light">@AppState.Value.AppUser.Name</button>
+            <button @onclick="@Logout" class="btn btn-sm btn-light">Logout</button>
         }
     </div>
 
@@ -23,7 +23,7 @@
         @Body
     </div>
 </div>
-@functions {
+@code {
     protected override void OnInit()
     {
         AppState.Subscribe(this);

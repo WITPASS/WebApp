@@ -1,4 +1,6 @@
 using Admin.Services;
+using Admin.Stores;
+using Blazor.Fluxor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.Configuration;
@@ -9,8 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using Blazor.Fluxor;
-using Admin.Stores;
 
 namespace Admin
 {
@@ -48,7 +48,7 @@ namespace Admin
             services.AddFluxor(options =>
             {
                 options.UseDependencyInjection(typeof(Startup).Assembly)
-                .AddMiddleware<Blazor.Fluxor.ReduxDevTools.ReduxDevToolsMiddleware>()
+                //.AddMiddleware<Blazor.Fluxor.ReduxDevTools.ReduxDevToolsMiddleware>() // https://github.com/dotnet/corefx/issues/38435
                 .AddMiddleware<Blazor.Fluxor.Routing.RoutingMiddleware>();
             });
 

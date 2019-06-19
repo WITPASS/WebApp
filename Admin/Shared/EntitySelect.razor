@@ -1,7 +1,7 @@
 ﻿@typeparam TItem
 <div class="form-group">
     <label class="text-primary">@Label</label>
-    <select bind="currValue" onclick="@ValueChangedAsync" Class="form-control">
+    <select bind="currValue" @onclick="@ValueChangedAsync" Class="form-control">
         <option value="null">--- select @Label.ToLower() ---</option>
         @foreach (var m in DataSource)
         {
@@ -9,7 +9,7 @@
         }
     </select>
 </div>
-@functions {
+@code {
 
     string currValue = string.Empty;
     string prevValue = string.Empty;

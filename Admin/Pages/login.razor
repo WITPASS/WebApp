@@ -3,9 +3,9 @@
 @inject IDispatcher Dispatcher
 <h1>Login</h1>
 
-@if(AppState.Value.Error != null)
+@if(AppState.Value.ErrorMessage != null)
 {
-    <div class="alert-danger">@AppState.Value.Error</div>
+    <div class="alert-danger">@AppState.Value.ErrorMessage</div>
 }
 
 <EditForm Model="@loginInfo" OnValidSubmit="@OnFormSave">
@@ -13,18 +13,18 @@
     <ValidationSummary />
     <div class="form-group">
         <lablel class="text-primary">Email</lablel>
-        <InputText bind-Value="loginInfo.Email" Class="form-control" />
+        <InputText @bind-Value="loginInfo.Email" Class="form-control" />
     </div>
     <div class="form-group">
         <lablel class="text-primary">Password</lablel>
-        <input type="password" bind="loginInfo.Password" Class="form-control" />
+        <input type="password" @bind="loginInfo.Password" Class="form-control" />
     </div>
     <div>
-        <button type="submit" class="btn btn-primary" disabled="@AppState.Value.LoggingIn" style="width:75px">Login</button>
+        <button type="submit" class="btn btn-primary" disabled="@AppState.Value.IsLoading" style="width:75px">Login</button>
     </div>
 </EditForm>
 
-@functions {
+@code {
     LoginInfo loginInfo = new LoginInfo();
 
     void OnFormSave()

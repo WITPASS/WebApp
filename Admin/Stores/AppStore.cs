@@ -16,33 +16,12 @@ namespace Admin.Stores
 
     public class AppState
     {
-        internal bool LoggingIn { get; private set; }
-        internal string Error { get; private set; }
-        internal UserInfo UserInfo { get; private set; }
-        internal bool LoggedIn => UserInfo != null;
-        internal Branch Branch { get; set; }
-        internal IList<string> Roles { get; private set; } = new List<string>();
-
-        public AppState() : this(false, null, null) { }
-        public AppState(bool loggingIn, string error, UserInfo userInfo)
-        {
-            Error = error;
-            LoggingIn = loggingIn;
-
-            if (userInfo != null)
-            {
-                var token = new JwToken(userInfo.Token);
-
-                UserInfo = userInfo;
-                Roles = token.Roles;
-
-                if (token.BranchId != Guid.Empty)
-                {
-                    Branch = new Branch { Id = token.BranchId, Name = userInfo.BranchName };
-                }
-
-            }
-        }
+        internal Branch AppBranch { get; set; }
+        internal string ErrorMessage { get; set; }
+        internal AppUser AppUser { get; set; }
+        internal bool IsLoading { get; set; } = false;
+        internal bool IsLoggedIn => AppUser != null;
+        internal IList<string> AppUserRoles { get; set; } = new List<string>();
     }
 
     #region Login
@@ -59,7 +38,20 @@ namespace Admin.Stores
 
     public class LoginReducer : Reducer<AppState, LoginAction>
     {
-        public override AppState Reduce(AppState state, LoginAction action) => new AppState();
+        //public override AppState Reduce(AppState state, LoginAction action) => new AppState();
+        public override AppState Reduce(AppState state, LoginAction action)
+        {
+            var _state = new AppState
+            {
+                AppBranch = state.AppBranch,
+                AppUser = state.AppUser,
+                AppUserRoles = state.AppUserRoles,
+                ErrorMessage = state.ErrorMessage,
+                IsLoading = true
+            };
+
+            return _state;
+        }
     }
 
     public class LoginEffect : Effect<LoginAction>
@@ -84,8 +76,32 @@ namespace Admin.Stores
                 await localStorage.SetItem("branch.name", userInfo.BranchName);
                 await localStorage.SetItem("user.name", userInfo.UserName);
                 await localStorage.SetItem("token", userInfo.Token);
-                api.BranchId = new JwToken(userInfo.Token).BranchId;
-                dispatcher.Dispatch(new LoginSuccessAction(userInfo));
+
+                var token = new JwToken(userInfo.Token);
+                var user = new AppUser { Id = token.UserId, Name = userInfo.UserName };
+
+                api.BranchId = token.BranchId;
+
+                if(api.BranchId == Guid.Empty)
+                {
+                    var branchId = await localStorage.GetItem("branch.id");
+
+                    if (!string.IsNullOrEmpty(branchId))
+                    {
+                        api.BranchId = new Guid(branchId);
+                    }
+                }
+
+                Branch branch = null;
+
+                if (api.BranchId != Guid.Empty) {
+                    branch = new Branch { Id = api.BranchId };
+                    await localStorage.SetItem("branch.id", api.BranchId.ToString());
+                }
+
+
+                dispatcher.Dispatch(new LoginSuccessAction(user, token.Roles, branch));
+
                 uriHelper.NavigateTo("/");
             }
             else
@@ -98,17 +114,33 @@ namespace Admin.Stores
     // login success
     public class LoginSuccessAction : IAction
     {
-        public LoginSuccessAction(UserInfo userInfo)
+        public LoginSuccessAction(AppUser appUser, IList<string> appUserRoles, Branch appBranch)
         {
-            UserInfo = userInfo;
+            AppUser = appUser;
+            AppUserRoles = appUserRoles;
+            AppBranch = appBranch;
         }
 
-        public UserInfo UserInfo { get; private set; }
+        public AppUser AppUser { get; private set; }
+        public IList<string> AppUserRoles { get; private set; }
+        public Branch AppBranch { get; private set; }
     }
 
     public class LoginSuccessReducer : Reducer<AppState, LoginSuccessAction>
     {
-        public override AppState Reduce(AppState state, LoginSuccessAction action) => new AppState(false, null, action.UserInfo);
+        public override AppState Reduce(AppState state, LoginSuccessAction action)
+        {
+            var _state = new AppState
+            {
+                AppBranch = action.AppBranch,
+                AppUser = action.AppUser,
+                AppUserRoles = action.AppUserRoles,
+                ErrorMessage = null,
+                IsLoading = false
+            };
+
+            return _state;
+        }
     }
 
     // login failed
@@ -116,15 +148,27 @@ namespace Admin.Stores
     {
         public LoginFailedAction(string error)
         {
-            Error = error;
+            ErrorMessage = error;
         }
 
-        public string Error { get; private set; }
+        public string ErrorMessage { get; private set; }
     }
 
     public class LoginFailedReducer : Reducer<AppState, LoginFailedAction>
     {
-        public override AppState Reduce(AppState state, LoginFailedAction action) => new AppState(false, action.Error, null);
+        public override AppState Reduce(AppState state, LoginFailedAction action)
+        {
+            var _state = new AppState
+            {
+                AppBranch = state.AppBranch,
+                AppUser = state.AppUser,
+                AppUserRoles = state.AppUserRoles,
+                ErrorMessage = action.ErrorMessage,
+                IsLoading = false
+            };
+
+            return _state;
+        }
     }
 
     // check login
@@ -132,7 +176,19 @@ namespace Admin.Stores
 
     public class CheckLoginReducer : Reducer<AppState, CheckLoginAction>
     {
-        public override AppState Reduce(AppState state, CheckLoginAction action) => new AppState();
+        public override AppState Reduce(AppState state, CheckLoginAction action)
+        {
+            var _state = new AppState
+            {
+                AppBranch = state.AppBranch,
+                AppUser = state.AppUser,
+                AppUserRoles = state.AppUserRoles,
+                ErrorMessage = state.ErrorMessage,
+                IsLoading = true
+            };
+
+            return _state;
+        }
     }
 
     public class CheckLoginEffect : Effect<CheckLoginAction>
@@ -156,11 +212,31 @@ namespace Admin.Stores
             {
                 var jwt = new JwToken(token);
                 api.BranchId = jwt.BranchId;
-                var branch = await localStorage.GetItem("branch.name");
-                var user = await localStorage.GetItem("user.name");
-                var userInfo = new UserInfo { Token = token, UserName = user, BranchName = branch };
 
-                dispatcher.Dispatch(new LoginSuccessAction(userInfo));
+                if(api.BranchId == Guid.Empty)
+                {
+                   var branchId = await localStorage.GetItem("branch.id");
+                    if (!string.IsNullOrEmpty(branchId))
+                    {
+                        api.BranchId = new Guid(branchId);
+                    }
+
+                }
+
+                var branchName = await localStorage.GetItem("branch.name");
+
+                Branch branch = null;
+
+                if(api.BranchId != Guid.Empty)
+                {
+                    branch = new Branch { Id = api.BranchId, Name = branchName };
+                }
+
+                var userName = await localStorage.GetItem("user.name");
+
+                var user = new AppUser { Id = jwt.UserId, Name = userName };
+            
+                dispatcher.Dispatch(new LoginSuccessAction(user, jwt.Roles, branch));
             }
             else
             {
@@ -191,12 +267,16 @@ namespace Admin.Stores
         {
             api.BranchId = action.Branch.Id;
 
-            var st = new AppState(false, null, state.UserInfo)
+            var _state = new AppState
             {
-                Branch = action.Branch
+                AppBranch = action.Branch,
+                AppUser = state.AppUser,
+                AppUserRoles = state.AppUserRoles,
+                ErrorMessage = state.ErrorMessage,
+                IsLoading = false
             };
 
-            return st;
+            return _state;
         }
     }
 
@@ -226,6 +306,7 @@ namespace Admin.Stores
 
         protected async override Task HandleAsync(LogoutAction action, IDispatcher dispatcher)
         {
+            await localStorage.RemoveItem("branch.id");
             await localStorage.RemoveItem("branch.name");
             await localStorage.RemoveItem("user.name");
             await localStorage.RemoveItem("token");

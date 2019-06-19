@@ -1,14 +1,14 @@
 ﻿@typeparam TItem
 <div class="form-group">
     <label class="text-primary">@Label</label>
-    <select bind="currValue" onclick="@ValueChangedAsync" Class="form-control">
+    <select bind="currValue" @onclick="@ValueChangedAsync" Class="form-control">
         @foreach (var m in EnumSource)
         {
             <option value="@m">@m</option>
         }
     </select>
 </div>
-@functions {
+@code {
 
     [Parameter]
     string Label { get; set; }
