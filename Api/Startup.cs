@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Linq;
 using System.Text;
@@ -65,8 +63,6 @@ namespace Api
             {
                 c.SwaggerDoc("v1", new Info { Title = "Web API", Version = "v1" });
             });
-
-            services.AddOcelot();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,8 +94,6 @@ namespace Api
                 routeBuilder.EnableDependencyInjection();
                 routeBuilder.Select().Filter().Expand().Count().OrderBy().MaxTop(500);
             });
-
-            app.UseOcelot().Wait();
         }
 
         private string ConnectionString
