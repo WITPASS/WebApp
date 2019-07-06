@@ -8,15 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api.Controllers
+namespace Api.Shared
 {
     [ApiController, Route("api/[controller]"), Authorize]
-    public class EntityController<T> : ControllerBase where T : Entity
+    public class EntityController<T, T2> : ControllerBase where T : Entity where T2 : DbContext
     {
-        protected readonly AppDbContext _context;
+        protected readonly T2 _context;
         protected readonly DbSet<T> _dbSet;
 
-        public EntityController(AppDbContext context, DbSet<T> dbSet)
+        public EntityController(T2 context, DbSet<T> dbSet)
         {
             _context = context;
             _dbSet = dbSet;
@@ -92,47 +92,6 @@ namespace Api.Controllers
         private bool Exists(Guid id)
         {
             return _dbSet.Any(e => e.Id == id);
-        }
-    }
-
-    public class BranchEntityController<T> : EntityController<T> where T : BranchEntity
-    {
-        public BranchEntityController(AppDbContext context, DbSet<T> dbSet) : base(context, dbSet) { }
-
-        public override IEnumerable<T> Get()
-        {
-            return _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId);
-        }
-
-        public override SingleResult<T> Get(Guid id)
-        {
-            var result = _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId && c.Id == id);
-            return SingleResult.Create(result);
-        }
-
-        public override async Task<IActionResult> Put(Guid id, T ent)
-        {
-            ent.BranchId = BranchId;
-            return await base.Put(id, ent);
-        }
-
-        public override async Task<ActionResult<T>> Post(T ent)
-        {
-            ent.BranchId = BranchId;
-            return await base.Post(ent);
-        }
-
-        protected Guid BranchId
-        {
-            get
-            {
-                if (User.IsInRole("Super"))
-                {
-                    return new Guid(Request.Headers["branchid"]);
-                }
-
-                return new Guid(User.Claims.Single(c => c.Type == "branchid").Value);
-            }
         }
     }
 }

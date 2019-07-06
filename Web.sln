@@ -15,9 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Fluxor", "Blazor.Flu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Gateway", "Api.Gateway\Api.Gateway.csproj", "{5E325EE9-75E9-4D72-9EB9-4A2ECD053FE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBus", "EventBus\EventBus.csproj", "{DE49801D-5659-46CD-9320-D80BBD131670}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "EventBus\EventBus.csproj", "{DE49801D-5659-46CD-9320-D80BBD131670}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusRabbitMQ", "EventBusRabbitMQ\EventBusRabbitMQ.csproj", "{505E18FB-F81C-4E28-9001-7A069E361066}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ", "EventBusRabbitMQ\EventBus.RabbitMQ.csproj", "{505E18FB-F81C-4E28-9001-7A069E361066}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Shared", "Api.Shared\Api.Shared.csproj", "{3736555C-D2A7-4B3C-82CB-48BFF0C5C715}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{505E18FB-F81C-4E28-9001-7A069E361066}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{505E18FB-F81C-4E28-9001-7A069E361066}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{505E18FB-F81C-4E28-9001-7A069E361066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3736555C-D2A7-4B3C-82CB-48BFF0C5C715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3736555C-D2A7-4B3C-82CB-48BFF0C5C715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3736555C-D2A7-4B3C-82CB-48BFF0C5C715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3736555C-D2A7-4B3C-82CB-48BFF0C5C715}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

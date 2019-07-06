@@ -13,23 +13,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using Microsoft.AspNet.OData;
+using Api.Shared;
 
 namespace Api.Controllers
 {
     [Authorize(Roles = "Super")]
-    public class BranchesController : EntityController<Branch>
+    public class BranchesController : EntityController<Branch, AppDbContext>
     {
         public BranchesController(AppDbContext context) : base(context, context.Branches) { }
     }
 
     [Authorize(Roles = "Admins")]
-    public class RolesController : BranchEntityController<Role>
+    public class RolesController : BranchEntityController<Role,AppDbContext>
     {
         public RolesController(AppDbContext context) : base(context, context.Roles) { }
     }
 
     [Authorize(Roles = "Admins")]
-    public class UsersController : BranchEntityController<AppUser>
+    public class UsersController : BranchEntityController<AppUser, AppDbContext>
     {
         public UsersController(AppDbContext context) : base(context, context.Users) { }
 
@@ -117,12 +118,12 @@ namespace Api.Controllers
     }
 
     [Authorize(Roles = "Admins")]
-    public class UserRolesController : BranchEntityController<UserRole>
+    public class UserRolesController : BranchEntityController<UserRole, AppDbContext>
     {
         public UserRolesController(AppDbContext context) : base(context, context.UserRoles) { }
     }
 
-    public class ImagesController : BranchEntityController<Image>
+    public class ImagesController : BranchEntityController<Image, AppDbContext>
     {
         public ImagesController(AppDbContext context) : base(context, context.Images) { }
 
