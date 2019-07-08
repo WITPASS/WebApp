@@ -11,32 +11,32 @@ using System.Threading.Tasks;
 namespace Api.Shared
 {
     [ApiController, Route("api/[controller]"), Authorize]
-    public class EntityController<T, T2> : ControllerBase where T : Entity where T2 : DbContext
+    public class EntityController<T, T2> : ControllerBase where T : DbContext where T2 : Entity
     {
-        protected readonly T2 _context;
-        protected readonly DbSet<T> _dbSet;
+        protected readonly T _context;
+        protected readonly DbSet<T2> _dbSet;
 
-        public EntityController(T2 context, DbSet<T> dbSet)
+        public EntityController(T context, DbSet<T2> dbSet)
         {
             _context = context;
             _dbSet = dbSet;
         }
 
         [HttpGet, EnableQuery]
-        virtual public IEnumerable<T> Get()
+        virtual public IEnumerable<T2> Get()
         {
             return _dbSet.AsNoTracking();
         }
 
         [HttpGet("{id}"), EnableQuery]
-        virtual public SingleResult<T> Get(Guid id)
+        virtual public SingleResult<T2> Get(Guid id)
         {
             var result = _dbSet.AsNoTracking().Where(c => c.Id == id);
             return SingleResult.Create(result);
         }
 
         [HttpPut("{id}")]
-        virtual public async Task<IActionResult> Put(Guid id, T ent)
+        virtual public async Task<IActionResult> Put(Guid id, T2 ent)
         {
             if (id != ent.Id)
             {
@@ -65,7 +65,7 @@ namespace Api.Shared
         }
 
         [HttpPost]
-        virtual public async Task<ActionResult<T>> Post(T ent)
+        virtual public async Task<ActionResult<T2>> Post(T2 ent)
         {
             _dbSet.Add(ent);
             await _context.SaveChangesAsync();
@@ -74,7 +74,7 @@ namespace Api.Shared
         }
 
         [HttpDelete("{id}")]
-        virtual public async Task<ActionResult<T>> Delete(Guid id)
+        virtual public async Task<ActionResult<T2>> Delete(Guid id)
         {
             var ent = await _dbSet.FindAsync(id);
 

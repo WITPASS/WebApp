@@ -18,19 +18,19 @@ using Api.Shared;
 namespace Api.Controllers
 {
     [Authorize(Roles = "Super")]
-    public class BranchesController : EntityController<Branch, AppDbContext>
+    public class BranchesController : EntityController<AppDbContext, Branch>
     {
         public BranchesController(AppDbContext context) : base(context, context.Branches) { }
     }
 
     [Authorize(Roles = "Admins")]
-    public class RolesController : BranchEntityController<Role,AppDbContext>
+    public class RolesController : BranchEntityController<AppDbContext, Role>
     {
         public RolesController(AppDbContext context) : base(context, context.Roles) { }
     }
 
     [Authorize(Roles = "Admins")]
-    public class UsersController : BranchEntityController<AppUser, AppDbContext>
+    public class UsersController : BranchEntityController<AppDbContext, AppUser>
     {
         public UsersController(AppDbContext context) : base(context, context.Users) { }
 
@@ -118,12 +118,12 @@ namespace Api.Controllers
     }
 
     [Authorize(Roles = "Admins")]
-    public class UserRolesController : BranchEntityController<UserRole, AppDbContext>
+    public class UserRolesController : BranchEntityController<AppDbContext, UserRole>
     {
         public UserRolesController(AppDbContext context) : base(context, context.UserRoles) { }
     }
 
-    public class ImagesController : BranchEntityController<Image, AppDbContext>
+    public class ImagesController : BranchEntityController<AppDbContext, Image>
     {
         public ImagesController(AppDbContext context) : base(context, context.Images) { }
 

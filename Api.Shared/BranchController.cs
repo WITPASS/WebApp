@@ -10,28 +10,28 @@ using System.Threading.Tasks;
 
 namespace Api.Shared
 {
-    public class BranchEntityController<T, T2> : EntityController<T, T2> where T : BranchEntity where T2 : DbContext
+    public class BranchEntityController<T, T2> : EntityController<T, T2> where T : DbContext where T2 : BranchEntity
     {
-        public BranchEntityController(T2 context, DbSet<T> dbSet) : base(context, dbSet) { }
+        public BranchEntityController(T context, DbSet<T2> dbSet) : base(context, dbSet) { }
 
-        public override IEnumerable<T> Get()
+        public override IEnumerable<T2> Get()
         {
             return _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId);
         }
 
-        public override SingleResult<T> Get(Guid id)
+        public override SingleResult<T2> Get(Guid id)
         {
             var result = _dbSet.AsNoTracking().Where(c => c.BranchId == BranchId && c.Id == id);
             return SingleResult.Create(result);
         }
 
-        public override async Task<IActionResult> Put(Guid id, T ent)
+        public override async Task<IActionResult> Put(Guid id, T2 ent)
         {
             ent.BranchId = BranchId;
             return await base.Put(id, ent);
         }
 
-        public override async Task<ActionResult<T>> Post(T ent)
+        public override async Task<ActionResult<T2>> Post(T2 ent)
         {
             ent.BranchId = BranchId;
             return await base.Post(ent);
