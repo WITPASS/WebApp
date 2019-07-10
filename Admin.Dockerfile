@@ -2,9 +2,10 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-preview6-alpine3.9 AS build
 WORKDIR /app
 EXPOSE 80
 
-# copy csproj and restore as distinct layers
+# copy csproj (inc. dependencies) and restore as distinct layers
 COPY Admin/Admin.csproj ./Admin/
 COPY Data/Data.csproj ./Data/
+COPY Blazor.Fluxor/Blazor.Fluxor.csproj ./Blazor.Fluxor/
 WORKDIR /app/Admin
 RUN dotnet restore
 
@@ -12,6 +13,7 @@ RUN dotnet restore
 WORKDIR /app/
 COPY Admin/. ./Admin/
 COPY Data/. ./Data/
+COPY Blazor.Fluxor/. ./Blazor.Fluxor/
 WORKDIR /app/Admin
 RUN dotnet publish -c Release
 

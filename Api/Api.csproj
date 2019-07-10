@@ -15,8 +15,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Api.Shared\Api.Shared.csproj" />
     <ProjectReference Include="..\Data\Data.csproj" />
-    <ProjectReference Include="..\EventBusRabbitMQ\EventBus.RabbitMQ.csproj" />
     <ProjectReference Include="..\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
   </ItemGroup>
 
 </Project>

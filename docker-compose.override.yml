@@ -1,0 +1,21 @@
+version: "3"
+services:
+  rabbitmq:
+    ports:
+      - "15672:15672"  # Important: In a production environment your should remove the external port
+      - "5672:5672"  # Important: In a production environment your should remove the external port
+  api:
+    ports:
+      - 9003:80 # should be >= 9003 per service. Important: In a production environment your should remove the external port
+
+  api.gateway:
+    ports:
+      - 9000:80  # Important: In a production environment your should remove the external port
+
+  admin:
+    ports:
+      - 9002:80  # Important: In a production environment your should remove the external port
+
+  public:
+    ports:
+      - 9001:80  # Important: In a production environment your should remove the external port

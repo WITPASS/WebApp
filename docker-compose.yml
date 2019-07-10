@@ -1,0 +1,51 @@
+version: "3"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
+  api:
+    build:
+      context: ./
+      dockerfile: Api.Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - DB_HOST=${DB_HOST_PGS}
+      - DB_USER=${DB_USER_PGS}
+      - DB_PASS=${DB_PASS_PGS}
+      - DB_NAME=${DB_NAME_API}
+    depends_on:
+      - rabbitmq
+
+  api.gateway:
+    build:
+      context: ./
+      dockerfile: Api.Gateway.Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    depends_on:
+      - rabbitmq
+      - api
+
+  admin:
+    build:
+      context: ./
+      dockerfile: Admin.Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - API_ENDPOINT=http://api.gateway/ # not in use. to provide API_ENDPOINT use appsettings.json in Admin/
+    depends_on:
+      - api.gateway
+
+  public:
+    build:
+      context: ./
+      dockerfile: Public.Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - API_ENDPOINT=http://api.gateway/
+    depends_on:
+      - api.gateway
