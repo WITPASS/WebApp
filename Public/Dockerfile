@@ -3,18 +3,18 @@ WORKDIR /app
 EXPOSE 80
 
 # copy csproj (inc. dependencies) and restore as distinct layers
-COPY Api.Gateway/Api.Gateway.csproj ./Api.Gateway/
-WORKDIR /app/Api.Gateway
-RUN dotnet restore
+COPY Public/Public.csproj Public/
+COPY Data/Data.csproj Data/
+
+RUN dotnet restore Public/Public.csproj
 
 # copy and publish app and libraries
-WORKDIR /app/
-COPY Api.Gateway/. ./Api.Gateway/
-WORKDIR /app/Api.Gateway
+COPY . .
+WORKDIR /app/Public
 RUN dotnet publish -c Release -o out
 
 # build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-alpine3.9
 WORKDIR /app
-COPY --from=build /app/Api.Gateway/out ./
-ENTRYPOINT ["dotnet", "Api.Gateway.dll"]
+COPY --from=build /app/Public/out ./
+ENTRYPOINT ["dotnet", "Public.dll"]

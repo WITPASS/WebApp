@@ -1,4 +1,5 @@
-version: "3"
+version: '3.4'
+
 services:
   rabbitmq:
     ports:
@@ -7,6 +8,8 @@ services:
   api:
     ports:
       - 9003:80 # should be >= 9003 per service. Important: In a production environment your should remove the external port
+    #volumes:
+      #- ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
   api.gateway:
     ports:
